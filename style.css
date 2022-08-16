@@ -1,0 +1,169 @@
+* {
+    --bg-d: #080808aa;
+    --bg: #222a;
+    --bg-l: #333a;
+    --bg-ll: #444a;
+
+    --txt: #ccc;
+    --txt-d: #888;
+
+    --tile-size: 140px;
+
+    color: var(--txt);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+    box-sizing: border-box;
+}
+
+html {
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg);
+}
+
+button, .btn, select, input {
+    background-color: var(--bg-ll);
+    border: none;
+    border-radius: 1rem;
+    padding: 5px 10px;
+    margin: 5px;
+    transition: 100ms;
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+button > *, .btn > * {
+    margin: 0 5px;
+}
+
+button:hover, .btn:hover {
+    transform: scale(110%);
+}
+
+button:disabled, .btn:disabled {
+    transform: scale(90%) !important;
+}
+
+button:disabled > *, .btn:disabled > *, select > * {
+    color: var(--txt-d);
+}
+
+button.circle, .btn.circle {
+    border-radius: 100%;
+    width: 2rem;
+    height: 2rem;
+}
+
+button.circle > *, .btn.circle > * {
+    margin: 0;
+}
+
+button:hover > .btn-info, .btn:hover > .btn-info {
+    transform: translate(0, -50%);
+    opacity: 100;
+}
+
+select {
+    padding: 5px 20px;
+}
+
+input {
+    width: 10rem;
+}
+
+input[type="color"] {
+    overflow: clip;
+    padding: 0;
+    color: transparent;
+}
+
+input[type="color"]::-webkit-color-swatch, input[type="color"]::-moz-color-swatch {
+    border: none;
+}
+
+#panel, #params, .prop {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+#panel {
+    transition: 200ms;
+    background-color: var(--bg);
+    border-radius: 10px;
+
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 20rem;
+
+    padding: 10px 10px 0px 10px;
+}
+
+#panel > *, .prop > *, #params > *{
+    margin-bottom: 10px;
+}
+
+#panel.hidden, #show-panel.hidden {
+    opacity: 0;
+    transform: translateY(-100px);
+}
+
+#show-panel {
+    transition: 200ms;
+    background-color: var(--bg);
+    border-radius: 0 0 10px 10px;
+
+    position: absolute;
+    top: 0;
+    right: 20px;
+
+    padding: 5px;
+}
+
+.prop {
+    background-color: var(--bg-l);
+    border-radius: 10px;
+
+    padding: 10px 10px 0px 10px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.prop-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.prop-row > input {
+    width: 10px;
+    flex-grow: 10;
+}
+
+.row > *, .prop-row > * {
+    margin: 0 10px 0 0; 
+}
+
+.sep {
+    background-color: var(--bg-ll);
+    height: 2px;
+    margin: 0 -10px 0 -10px;
+}
+
+
