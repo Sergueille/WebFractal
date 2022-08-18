@@ -18,6 +18,8 @@ addEventListener("resize", onResize);
 function mainLoop() {
     time = Date.now() / 1000;
     deltaTime = time - lastTime;
+    if (deltaTime > 1)
+        deltaTime = 1; // Prevent FPS drop breaking program
     // Clear viewport
     GL.clearColor(0.2, 0.0, 0.0, 1.0);
     GL.clear(GL.COLOR_BUFFER_BIT);

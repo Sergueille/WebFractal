@@ -10,6 +10,13 @@ let selectedRenderer = 0;
 let currentRenderer: Renderer;
 let currentRendererID: number;
 
+const addBtnSpeed = 0.5; // each second
+const addBtnShiftSpeed = 2; // each second
+const addBtnCtrlSpeed = 0.05; // each second
+
+let shift: boolean;
+let control: boolean;
+
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
         let option = document.createElement("option");
@@ -24,6 +31,14 @@ function initUI() {
     colorInputB.value = "#ff0000";
     colorInputC.value = "#000000";
     colorTreshold.value = "0.95"
+
+    document.addEventListener("keyup", UpdateKeys);
+    document.addEventListener("keydown", UpdateKeys);
+}
+
+function UpdateKeys(ev: KeyboardEvent) {
+    shift = ev.shiftKey;
+    control = ev.ctrlKey;
 }
 
 function togglePanel() {
@@ -52,4 +67,36 @@ function UpdateUI() {
         GL.uniform3fv(getShaderUniform(shader, "colorC"), hexToRgb(colorInputC.value));
         GL.uniform1f(getShaderUniform(shader, "treshold"), +colorTreshold.value);
     }
+}
+
+function AddButton(ev: Event, direction: number, int: boolean) {
+    let func = setInterval(() => {
+        let parent = (ev.target as HTMLElement).parentElement;
+        let input = parent?.querySelector("input")!!;
+        let value = parseFloat(input.value);
+    
+        if (int) {
+            value = Math.round(value);
+            value += 1;
+        }
+        else if (shift) {
+            value += addBtnShiftSpeed * deltaTime * direction;
+            value = Math.round(value * 1000) / 1000;
+        } 
+        else if (control) {
+            value += addBtnCtrlSpeed * deltaTime * direction;
+            value = Math.round(value * 1000) / 1000;
+        }
+        else{
+            value += addBtnSpeed * deltaTime * direction;
+            value = Math.round(value * 1000) / 1000;
+        }
+    
+        input.value = value.toString();
+        input.dispatchEvent(new Event('change'));
+    }
+    , 0);
+
+    (ev.target as HTMLElement).onmouseup = () => clearInterval(func);
+    (ev.target as HTMLElement).onmouseleave = () => clearInterval(func);
 }

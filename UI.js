@@ -10,6 +10,11 @@ const colorTreshold = document.getElementById("color-treshold");
 let selectedRenderer = 0;
 let currentRenderer;
 let currentRendererID;
+const addBtnSpeed = 0.5; // each second
+const addBtnShiftSpeed = 2; // each second
+const addBtnCtrlSpeed = 0.05; // each second
+let shift;
+let control;
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
         let option = document.createElement("option");
@@ -22,6 +27,12 @@ function initUI() {
     colorInputB.value = "#ff0000";
     colorInputC.value = "#000000";
     colorTreshold.value = "0.95";
+    document.addEventListener("keyup", UpdateKeys);
+    document.addEventListener("keydown", UpdateKeys);
+}
+function UpdateKeys(ev) {
+    shift = ev.shiftKey;
+    control = ev.ctrlKey;
 }
 function togglePanel() {
     panel.classList.toggle("hidden");
@@ -45,4 +56,31 @@ function UpdateUI() {
         GL.uniform3fv(getShaderUniform(shader, "colorC"), hexToRgb(colorInputC.value));
         GL.uniform1f(getShaderUniform(shader, "treshold"), +colorTreshold.value);
     }
+}
+function AddButton(ev, direction, int) {
+    let func = setInterval(() => {
+        let parent = ev.target.parentElement;
+        let input = parent === null || parent === void 0 ? void 0 : parent.querySelector("input");
+        let value = parseFloat(input.value);
+        if (int) {
+            value = Math.round(value);
+            value += 1;
+        }
+        else if (shift) {
+            value += addBtnShiftSpeed * deltaTime * direction;
+            value = Math.round(value * 1000) / 1000;
+        }
+        else if (control) {
+            value += addBtnCtrlSpeed * deltaTime * direction;
+            value = Math.round(value * 1000) / 1000;
+        }
+        else {
+            value += addBtnSpeed * deltaTime * direction;
+            value = Math.round(value * 1000) / 1000;
+        }
+        input.value = value.toString();
+        input.dispatchEvent(new Event('change'));
+    }, 0);
+    ev.target.onmouseup = () => clearInterval(func);
+    ev.target.onmouseleave = () => clearInterval(func);
 }
