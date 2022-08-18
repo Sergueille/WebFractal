@@ -75,3 +75,10 @@ function onResize() {
     ratio = window.innerWidth / window.innerHeight;
     GL.viewport(0, 0, canvas.width, canvas.height);
 }
+function Export() {
+    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    var a = document.createElement('a');
+    a.href = image;
+    a.download = "fractal.png";
+    a.click();
+}
