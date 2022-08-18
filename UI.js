@@ -1,5 +1,5 @@
 "use strict";
-const panel = document.getElementById("panel");
+const panel = document.getElementById("panel-wrapper");
 const showPanel = document.getElementById("show-panel");
 const paramsContainer = document.getElementById("params");
 const renderSelect = document.getElementById("render-select");
@@ -55,6 +55,7 @@ function UpdateUI() {
         GL.uniform3fv(getShaderUniform(shader, "colorB"), hexToRgb(colorInputB.value));
         GL.uniform3fv(getShaderUniform(shader, "colorC"), hexToRgb(colorInputC.value));
         GL.uniform1f(getShaderUniform(shader, "treshold"), +colorTreshold.value);
+        document.body.style.setProperty('--prim', colorInputB.value);
     }
 }
 function AddButton(ev, direction, int) {

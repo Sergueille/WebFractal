@@ -1,14 +1,4 @@
 * {
-    --bg-d: #080808aa;
-    --bg: #222a;
-    --bg-l: #333a;
-    --bg-ll: #444a;
-
-    --txt: #ccc;
-    --txt-d: #888;
-
-    --tile-size: 140px;
-
     color: var(--txt);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
@@ -20,6 +10,19 @@ html {
 }
 
 body {
+    /* variables here becaus modified by JS*/
+    --bg-d: #080808aa;
+    --bg: #222a;
+    --bg-l: #333a;
+    --bg-ll: #444a;
+
+    --txt: #ccc;
+    --txt-d: #888;
+
+    --tile-size: 140px;
+
+    --prim: red;
+
     margin: 0;
     padding: 0;
     background-color: var(--bg);
@@ -68,17 +71,18 @@ button.circle > *, .btn.circle > * {
     margin: 0;
 }
 
-button:hover > .btn-info, .btn:hover > .btn-info {
-    transform: translate(0, -50%);
-    opacity: 100;
-}
-
 select {
     padding: 5px 20px;
 }
 
 input {
     width: 10rem;
+    box-shadow: var(--prim) 0 0 0 0;
+}
+
+input:hover, input:focus {
+    outline: none;
+    box-shadow: var(--prim) 0 0 0 2px;
 }
 
 input[type="color"] {
@@ -106,32 +110,35 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-#panel, #params, .prop {
+.panel, #params, .prop {
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
 
-#panel {
+#panel-wrapper {
     transition: 200ms;
-    background-color: var(--bg);
-    border-radius: 10px;
-
     position: absolute;
     top: 20px;
     right: 20px;
     width: 25rem;
+}
+
+.panel {
+    background-color: var(--bg);
+    border-radius: 10px;
 
     padding: 10px 10px 0px 10px;
 }
 
-#panel > *, .prop > *, #params > *{
-    margin-bottom: 10px;
+#panel-wrapper > *, .panel > *, .prop > *, #params > *{
+    margin-bottom: 10px !important;
 }
 
-#panel.hidden, #show-panel.hidden {
+#panel-wrapper.hidden, #show-panel.hidden {
     opacity: 0;
     transform: translateY(-100px);
+    pointer-events: none;
 }
 
 #show-panel {
@@ -144,6 +151,10 @@ input[type=number] {
     right: 20px;
 
     padding: 5px;
+}
+
+#params {
+    margin-bottom: 0 !important;
 }
 
 .prop {

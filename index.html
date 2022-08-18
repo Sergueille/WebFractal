@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0">
     <title>WebFractal</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
-    
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
     <script src="util.js" defer="defer"></script>
     <script src="UI.js" defer="defer"></script>
     <script src="renderer.js" defer="defer"></script>
@@ -65,49 +67,52 @@
         </div>
     </template>
 </head>
+
 <body>
     <canvas id="canvas"></canvas>
-    <div id="panel">
-        <div class="row">
-            <span>Type de fractale:</span>
-            <select id="render-select" onchange="changeRendererEvent(event);">
-            </select>
-        </div>
-        <span class="sep"></span>
-        <div id="params">
-        </div>
-        <span class="sep"></span>
-        <div class="prop-row">
-            <span class="prop-name">Couleurs</span>
-            <input type="color" id="color-a"></input>
-            <input type="color" id="color-b"></input>
-            <input type="color" id="color-c"></input>
-        </div>
-        <div class="prop-row">
-            <span class="prop-name">Seuil</span>
-            <input type="number" id="color-treshold"></input>
-            <button class="circle" onmousedown="AddButton(event, 1, false)">
-                <span class="material-symbols-outlined">
-                    add
-                </span>
-            </button>
-            <button class="circle" onmousedown="AddButton(event, -1, false)">
-                <span class="material-symbols-outlined">
-                    remove
-                </span>
-            </button>
-        </div>
-        <span class="sep"></span>
-        <div class="row">
-            <button class="circle" onclick="centerCamera()">
-                <span class="material-symbols-outlined">center_focus_strong</span>
-            </button>
-            <button class="circle" onclick="togglePanel()">
-                <span class="material-symbols-outlined">visibility_off</span>
-            </button>
-            <button class="circle" onclick="Export()">
-                <span class="material-symbols-outlined">upload</span>
-            </button>
+    <div id="panel-wrapper">
+        <div class="panel">
+            <div class="row">
+                <span>Type de fractale:</span>
+                <select id="render-select" onchange="changeRendererEvent(event);">
+                </select>
+            </div>
+            <span class="sep"></span>
+            <div id="params">
+            </div>
+            <span class="sep"></span>
+            <div class="prop-row">
+                <span class="prop-name">Couleurs</span>
+                <input type="color" id="color-a"></input>
+                <input type="color" id="color-b"></input>
+                <input type="color" id="color-c"></input>
+            </div>
+            <div class="prop-row">
+                <span class="prop-name">Seuil</span>
+                <input type="number" id="color-treshold"></input>
+                <button class="circle" onmousedown="AddButton(event, 1, false)">
+                    <span class="material-symbols-outlined">
+                        add
+                    </span>
+                </button>
+                <button class="circle" onmousedown="AddButton(event, -1, false)">
+                    <span class="material-symbols-outlined">
+                        remove
+                    </span>
+                </button>
+            </div>
+            <span class="sep"></span>
+            <div class="row">
+                <button class="circle" onclick="centerCamera()">
+                    <span class="material-symbols-outlined">center_focus_strong</span>
+                </button>
+                <button class="circle" onclick="togglePanel()">
+                    <span class="material-symbols-outlined">visibility_off</span>
+                </button>
+                <button class="circle" onclick="Export()">
+                    <span class="material-symbols-outlined">upload</span>
+                </button>
+            </div>
         </div>
     </div>
     <div id="show-panel" class="hidden">
@@ -116,4 +121,5 @@
         </button>
     </div>
 </body>
+
 </html>
