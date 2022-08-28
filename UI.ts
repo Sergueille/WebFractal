@@ -125,6 +125,8 @@ function AddButton(ev: Event, direction: number, int: boolean) {
 
     (ev.target as HTMLElement).onmouseup = () => clearInterval(func);
     (ev.target as HTMLElement).onmouseleave = () => clearInterval(func);
+
+    (ev.target as HTMLElement).ontouchend = () => clearInterval(func);
 }
 
 function OpenSubPanel(id : string) {

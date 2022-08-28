@@ -104,6 +104,7 @@ function AddButton(ev, direction, int) {
     }, 0);
     ev.target.onmouseup = () => clearInterval(func);
     ev.target.onmouseleave = () => clearInterval(func);
+    ev.target.ontouchend = () => clearInterval(func);
 }
 function OpenSubPanel(id) {
     if (currentSubPanel != null) {

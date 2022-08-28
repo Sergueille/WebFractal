@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
     <title>WebFractal</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet"
@@ -23,12 +24,12 @@
             <span></span>
             <span>X:</span>
             <input type="number" class="prop-val-x"></input>
-            <button class="circle" onmousedown="AddButton(event, 1, false)">
+            <button class="circle" onmousedown="AddButton(event, 1, false)" ontouchstart="AddButton(event, 1, false)">
                 <span class="material-symbols-outlined">
                     add
                 </span>
             </button>
-            <button class="circle" onmousedown="AddButton(event, -1, false)">
+            <button class="circle" onmousedown="AddButton(event, -1, false)" ontouchstart="AddButton(event, -1, false)">
                 <span class="material-symbols-outlined">
                     remove
                 </span>
@@ -38,12 +39,12 @@
             <span></span>
             <span>Y:</span>
             <input type="number" class="prop-val-y"></input>
-            <button class="circle" onmousedown="AddButton(event, 1, false)">
+            <button class="circle" onmousedown="AddButton(event, 1, false)" ontouchstart="AddButton(event, 1, false)">
                 <span class="material-symbols-outlined">
                     add
                 </span>
             </button>
-            <button class="circle" onmousedown="AddButton(event, -1, false)">
+            <button class="circle" onmousedown="AddButton(event, -1, false)" ontouchstart="AddButton(event, -1, false)">
                 <span class="material-symbols-outlined">
                     remove
                 </span>
@@ -54,12 +55,12 @@
         <div class="prop-row">
             <span class="prop-name">Nom</span>
             <input type="number" class="prop-val"></input>
-            <button class="circle" onmousedown="AddButton(event, 1, false)">
+            <button class="circle" onmousedown="AddButton(event, 1, false)" ontouchstart="AddButton(event, 1, false)">
                 <span class="material-symbols-outlined">
                     add
                 </span>
             </button>
-            <button class="circle" onmousedown="AddButton(event, -1, false)">
+            <button class="circle" onmousedown="AddButton(event, -1, false)" ontouchstart="AddButton(event, -1, false)">
                 <span class="material-symbols-outlined">
                     remove
                 </span>
@@ -91,12 +92,12 @@
                 <div class="prop-row">
                     <span class="prop-name">Seuil</span>
                     <input type="number" id="color-treshold"></input>
-                    <button class="circle" onmousedown="AddButton(event, 1, false)">
+                    <button class="circle" onmousedown="AddButton(event, 1, false)" ontouchstart="AddButton(event, 1, false)">
                         <span class="material-symbols-outlined">
                             add
                         </span>
                     </button>
-                    <button class="circle" onmousedown="AddButton(event, -1, false)">
+                    <button class="circle" onmousedown="AddButton(event, -1, false)" ontouchstart="AddButton(event, -1, false)">
                         <span class="material-symbols-outlined">
                             remove
                         </span>
@@ -133,12 +134,12 @@
                 <div class="prop-row">
                     <span class="prop-name">Résolution X</span>
                     <input type="number" id="export-size-x" value="500"></input>
-                    <button class="circle" onmousedown="AddButton(event, 1, true)">
+                    <button class="circle" onmousedown="AddButton(event, 1, true)" ontouchstart="AddButton(event, 1, true)">
                         <span class="material-symbols-outlined">
                             add
                         </span>
                     </button>
-                    <button class="circle" onmousedown="AddButton(event, -1, true)">
+                    <button class="circle" onmousedown="AddButton(event, -1, true)" ontouchstart="AddButton(event, -1, true)">
                         <span class="material-symbols-outlined">
                             remove
                         </span>
@@ -147,12 +148,12 @@
                 <div class="prop-row">
                     <span class="prop-name">Résolution Y</span>
                     <input type="number" id="export-size-y" value="500"></input>
-                    <button class="circle" onmousedown="AddButton(event, 1, true)">
+                    <button class="circle" onmousedown="AddButton(event, 1, true)" ontouchstart="AddButton(event, 1, true)">
                         <span class="material-symbols-outlined">
                             add
                         </span>
                     </button>
-                    <button class="circle" onmousedown="AddButton(event, -1, true)">
+                    <button class="circle" onmousedown="AddButton(event, -1, true)" ontouchstart="AddButton(event, -1, true)">
                         <span class="material-symbols-outlined">
                             remove
                         </span>

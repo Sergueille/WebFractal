@@ -37,6 +37,9 @@ class vec2 {
     len() {
         return Math.sqrt(this.sqrlen());
     }
+    abs() {
+        return new vec2(Math.abs(this.x), Math.abs(this.y));
+    }
 }
 function delay(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));

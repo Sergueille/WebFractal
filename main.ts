@@ -107,7 +107,7 @@ function Export() {
         exportSize = new vec2(window.innerWidth, window.innerHeight);
     }
     else {
-        exportSize = exportCustomSize.copy()
+        exportSize = exportCustomSize.abs()
     }
 
     // Apply custom size
