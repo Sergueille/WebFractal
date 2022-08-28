@@ -1,4 +1,5 @@
-const panel = document.getElementById("panel-wrapper")!!;
+const panelWrapper = document.getElementById("panel-wrapper")!!;
+const panel = document.getElementById("main-panel")!!;
 const showPanel = document.getElementById("show-panel")!!;
 const paramsContainer = document.getElementById("params")!!;
 const renderSelect = document.getElementById("render-select")!! as HTMLSelectElement;
@@ -6,6 +7,9 @@ const colorInputA = document.getElementById("color-a")!! as HTMLInputElement;
 const colorInputB = document.getElementById("color-b")!! as HTMLInputElement;
 const colorInputC = document.getElementById("color-c")!! as HTMLInputElement;
 const colorTreshold = document.getElementById("color-treshold")!! as HTMLInputElement;
+const exportSizeTypeSelect = document.getElementById("export-size-type") as HTMLSelectElement;
+const exportSizeXInput = document.getElementById("export-size-x") as HTMLInputElement;
+const exportSizeYInput = document.getElementById("export-size-y") as HTMLInputElement;
 let selectedRenderer = 0;
 let currentRenderer: Renderer;
 let currentRendererID: number;
@@ -16,6 +20,15 @@ const addBtnCtrlSpeed = 0.05; // each second
 
 let shift: boolean;
 let control: boolean;
+
+const innerPanels : { [id: string] : HTMLElement; } = {};
+let currentSubPanel : HTMLElement | null = null;
+
+enum ExportSizeType {
+    screenSize,
+    windowSize,
+    customSize
+}
 
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
@@ -34,6 +47,15 @@ function initUI() {
 
     document.addEventListener("keyup", UpdateKeys);
     document.addEventListener("keydown", UpdateKeys);
+
+    for (let child of panel.children) {
+        innerPanels[child.id] = child as HTMLElement;
+        innerPanels[child.id].style.opacity = "0";
+        innerPanels[child.id].style.left = "100%";
+    }
+
+    OpenSubPanel("props-panel");
+    HideExportCustomSize();
 }
 
 function UpdateKeys(ev: KeyboardEvent) {
@@ -42,7 +64,7 @@ function UpdateKeys(ev: KeyboardEvent) {
 }
 
 function togglePanel() {
-    panel.classList.toggle("hidden")
+    panelWrapper.classList.toggle("hidden")
     showPanel.classList.toggle("hidden")
 }
 
@@ -69,6 +91,8 @@ function UpdateUI() {
         
         document.body.style.setProperty('--prim', colorInputB.value);
     }
+    
+    panel.style.setProperty("height", currentSubPanel?.clientHeight + "px");
 }
 
 function AddButton(ev: Event, direction: number, int: boolean) {
@@ -79,7 +103,7 @@ function AddButton(ev: Event, direction: number, int: boolean) {
     
         if (int) {
             value = Math.round(value);
-            value += 1;
+            value += direction;
         }
         else if (shift) {
             value += addBtnShiftSpeed * deltaTime * direction;
@@ -101,4 +125,40 @@ function AddButton(ev: Event, direction: number, int: boolean) {
 
     (ev.target as HTMLElement).onmouseup = () => clearInterval(func);
     (ev.target as HTMLElement).onmouseleave = () => clearInterval(func);
+}
+
+function OpenSubPanel(id : string) {
+    if (currentSubPanel != null) {
+        currentSubPanel.style.opacity = "0";
+
+        if (currentSubPanel.id === "props-panel") {
+            currentSubPanel.style.left = "-100%";   
+            currentSubPanel.style.right = "100%";    
+        }
+        else {
+            currentSubPanel.style.left = "100%";
+            currentSubPanel.style.right = "-100%";   
+        }
+    }
+
+    innerPanels[id].style.opacity = "1";
+    innerPanels[id].style.left = "0";
+    innerPanels[id].style.right = "0";
+    currentSubPanel = innerPanels[id];
+}
+
+function HideExportCustomSize() {
+    const exportSizeType = +exportSizeTypeSelect.value;
+    if (exportSizeType === ExportSizeType.customSize) {
+        if (exportSizeXInput.parentElement)
+            exportSizeXInput.parentElement.style.display = "flex";
+        if (exportSizeYInput.parentElement)
+            exportSizeYInput.parentElement.style.display = "flex";
+    }
+    else {
+        if (exportSizeXInput.parentElement)
+            exportSizeXInput.parentElement.style.display = "none";
+        if (exportSizeYInput.parentElement)
+            exportSizeYInput.parentElement.style.display = "none";
+    }
 }

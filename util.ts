@@ -42,6 +42,14 @@ class vec2 {
     isEq(other: vec2) {
         return this.x === other.x && this.y === other.y;
     }
+
+    sqrlen() {
+        return this.x * this.x + this.y * this.y;
+    }
+
+    len() {
+        return Math.sqrt(this.sqrlen());
+    }
 }
 
 function delay(milliseconds: number) {

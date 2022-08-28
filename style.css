@@ -19,8 +19,6 @@ body {
     --txt: #ccc;
     --txt-d: #888;
 
-    --tile-size: 140px;
-
     --prim: red;
 
     margin: 0;
@@ -110,7 +108,7 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-.panel, #params, .prop {
+.inner-panel, #params, .prop {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -122,16 +120,32 @@ input[type=number] {
     top: 20px;
     right: 20px;
     width: 25rem;
+    overflow-y: auto;
+
+    max-height: calc(100vh - 40px);
+    border-radius: 10px;
 }
 
 .panel {
+    position: relative;
     background-color: var(--bg);
     border-radius: 10px;
+    overflow: hidden;
+    height: 200px;
 
-    padding: 10px 10px 0px 10px;
+    transition: 200ms;
 }
 
-#panel-wrapper > *, .panel > *, .prop > *, #params > *{
+.inner-panel{
+    position: absolute;
+
+    flex-shrink: 0;
+    width: 100%;
+    padding: 10px 10px 0px 10px;
+    transition: 200ms;
+}
+
+#panel-wrapper > *, .inner-panel > *, .prop > *, #params > *{
     margin-bottom: 10px !important;
 }
 
@@ -193,4 +207,15 @@ input[type=number] {
     margin: 0 -10px 0 -10px;
 }
 
+@media screen and (max-width: 450px) {
+    #panel-wrapper {
+        top: 0;
+        left: 0;
+        width: 100%;
+        border-radius: 0;
+    }
 
+    .panel {
+        border-radius: 0;
+    }
+}

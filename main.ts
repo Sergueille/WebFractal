@@ -56,9 +56,8 @@ function mainLoop() {
     updateCamera();
 
     lastTime = time;
-    setTimeout(mainLoop, 0);
 }
-mainLoop();
+setInterval(mainLoop, 1000 / 100);
 
 function CreateQuad() {
     const positions = [
@@ -97,9 +96,36 @@ function onResize() {
 }
 
 function Export() {
+    let exportSize;
+    const exportSizeType = +exportSizeTypeSelect.value;
+    const exportCustomSize = new vec2(+exportSizeXInput.value, +exportSizeYInput.value);
+
+    if (exportSizeType === ExportSizeType.screenSize) {
+        exportSize = new vec2(window.screen.width, window.screen.height);
+    }
+    else if (exportSizeType === ExportSizeType.windowSize) {
+        exportSize = new vec2(window.innerWidth, window.innerHeight);
+    }
+    else {
+        exportSize = exportCustomSize.copy()
+    }
+
+    // Apply custom size
+    canvas.setAttribute("width", exportSize.x.toString());
+    canvas.setAttribute("height", exportSize.y.toString());
+    ratio = exportSize.x / exportSize.y;
+    GL.viewport(0, 0, canvas.width, canvas.height);
+
+    // Re-draw scene
+    mainLoop();
+
+    // Save image
     var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
     var a = document.createElement('a');
     a.href = image as string & Location;
     a.download = "fractal.png";
     a.click();
+
+    // Reset canvas size
+    onResize();
 }

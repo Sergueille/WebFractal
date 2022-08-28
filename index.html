@@ -71,47 +71,99 @@
 <body>
     <canvas id="canvas"></canvas>
     <div id="panel-wrapper">
-        <div class="panel">
-            <div class="row">
-                <span>Type de fractale:</span>
-                <select id="render-select" onchange="changeRendererEvent(event);">
-                </select>
+        <div class="panel" id="main-panel">
+            <div class="inner-panel" id="props-panel">
+                <div class="row">
+                    <span>Type de fractale:</span>
+                    <select id="render-select" onchange="changeRendererEvent(event);">
+                    </select>
+                </div>
+                <span class="sep"></span>
+                <div id="params">
+                </div>
+                <span class="sep"></span>
+                <div class="prop-row">
+                    <span class="prop-name">Couleurs</span>
+                    <input type="color" id="color-a"></input>
+                    <input type="color" id="color-b"></input>
+                    <input type="color" id="color-c"></input>
+                </div>
+                <div class="prop-row">
+                    <span class="prop-name">Seuil</span>
+                    <input type="number" id="color-treshold"></input>
+                    <button class="circle" onmousedown="AddButton(event, 1, false)">
+                        <span class="material-symbols-outlined">
+                            add
+                        </span>
+                    </button>
+                    <button class="circle" onmousedown="AddButton(event, -1, false)">
+                        <span class="material-symbols-outlined">
+                            remove
+                        </span>
+                    </button>
+                </div>
+                <span class="sep"></span>
+                <div class="row">
+                    <button class="circle" onclick="centerCamera()">
+                        <span class="material-symbols-outlined">center_focus_strong</span>
+                    </button>
+                    <button class="circle" onclick="togglePanel()">
+                        <span class="material-symbols-outlined">visibility_off</span>
+                    </button>
+                    <button class="circle" onclick="OpenSubPanel('export-panel')">
+                        <span class="material-symbols-outlined">upload</span>
+                    </button>
+                </div>
             </div>
-            <span class="sep"></span>
-            <div id="params">
-            </div>
-            <span class="sep"></span>
-            <div class="prop-row">
-                <span class="prop-name">Couleurs</span>
-                <input type="color" id="color-a"></input>
-                <input type="color" id="color-b"></input>
-                <input type="color" id="color-c"></input>
-            </div>
-            <div class="prop-row">
-                <span class="prop-name">Seuil</span>
-                <input type="number" id="color-treshold"></input>
-                <button class="circle" onmousedown="AddButton(event, 1, false)">
-                    <span class="material-symbols-outlined">
-                        add
-                    </span>
-                </button>
-                <button class="circle" onmousedown="AddButton(event, -1, false)">
-                    <span class="material-symbols-outlined">
-                        remove
-                    </span>
-                </button>
-            </div>
-            <span class="sep"></span>
-            <div class="row">
-                <button class="circle" onclick="centerCamera()">
-                    <span class="material-symbols-outlined">center_focus_strong</span>
-                </button>
-                <button class="circle" onclick="togglePanel()">
-                    <span class="material-symbols-outlined">visibility_off</span>
-                </button>
-                <button class="circle" onclick="Export()">
-                    <span class="material-symbols-outlined">upload</span>
-                </button>
+            <div class="inner-panel" id="export-panel">
+                <div class="row">
+                    <button class="circle" onclick="OpenSubPanel('props-panel')">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </button>
+                </div>
+                <span class="sep"></span>
+                <div class="prop-row">
+                    <span class="prop-name">Taille</span>
+                    <select id="export-size-type" onchange="HideExportCustomSize()" value="0">
+                        <option value="0">Taille de l'écran</option>
+                        <option value="1">Taille du site</option>
+                        <option value="2">Taille définie</option>
+                    </select>
+                </div>
+                <div class="prop-row">
+                    <span class="prop-name">Résolution X</span>
+                    <input type="number" id="export-size-x" value="500"></input>
+                    <button class="circle" onmousedown="AddButton(event, 1, true)">
+                        <span class="material-symbols-outlined">
+                            add
+                        </span>
+                    </button>
+                    <button class="circle" onmousedown="AddButton(event, -1, true)">
+                        <span class="material-symbols-outlined">
+                            remove
+                        </span>
+                    </button>
+                </div>
+                <div class="prop-row">
+                    <span class="prop-name">Résolution Y</span>
+                    <input type="number" id="export-size-y" value="500"></input>
+                    <button class="circle" onmousedown="AddButton(event, 1, true)">
+                        <span class="material-symbols-outlined">
+                            add
+                        </span>
+                    </button>
+                    <button class="circle" onmousedown="AddButton(event, -1, true)">
+                        <span class="material-symbols-outlined">
+                            remove
+                        </span>
+                    </button>
+                </div>
+                <span class="sep"></span>
+                <div class="row">
+                    <button class="circle" onclick="Export()">
+                        <span class="material-symbols-outlined">done</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

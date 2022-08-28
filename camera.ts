@@ -1,5 +1,6 @@
 let isDragging: boolean; // Is the user moving the 2d view?
 let lastMousePos: vec2; // Last drag position
+let lastTouchDistance: number; // Lastdistance between touches (for zoom)
 
 let cameraPos: vec2 = new vec2(0); // position of the camera
 let cameraSize: number = 1; // sizo of the camera (its height)
@@ -16,6 +17,10 @@ function initCamera() {
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseup", onMouseUp);
     canvas.addEventListener("wheel", onScroll);
+    
+    canvas.addEventListener("touchstart", onTouchStart);
+    canvas.addEventListener("touchend", onTouchEnd);
+    canvas.addEventListener("touchmove", onTouchMove);
 }
 
 function centerCamera() {
@@ -45,6 +50,18 @@ function onMouseDown(ev: MouseEvent) {
     shouldSmoothCamera = false;
 }
 
+function onTouchStart(ev: TouchEvent) {
+    isDragging = true;
+    lastMousePos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
+    shouldSmoothCamera = false;
+
+    if (ev.touches.length === 2) {
+        let touch0Pos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
+        let touch1Pos = new vec2(ev.touches[1].clientX, ev.touches[1].clientY);
+        lastTouchDistance = touch1Pos.sub(touch0Pos).len();
+    }
+}
+
 function onMouseMove(ev: MouseEvent) {
     if (isDragging) {
         let newPos = new vec2(ev.clientX, ev.clientY);
@@ -56,7 +73,35 @@ function onMouseMove(ev: MouseEvent) {
     }
 }
 
+function onTouchMove(ev: TouchEvent) {
+    let touchCount = ev.touches.length;
+
+    if (touchCount === 1) { // Move view
+        let touch = ev.touches[0];
+
+        let newPos = new vec2(touch.clientX, touch.clientY);
+        let delta = newPos.sub(lastMousePos).divide(canvasSize.y).mult(cameraSize * 2);
+        delta.x *= -1;
+        cameraPos = cameraPos.add(delta);
+        lastMousePos = newPos;
+    }
+    else if (touchCount === 2) { // Zoom
+        let touch0Pos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
+        let touch1Pos = new vec2(ev.touches[1].clientX, ev.touches[1].clientY);
+        let dist = touch1Pos.sub(touch0Pos).len();
+
+        targetCameraSize *= lastTouchDistance / dist;
+        cameraSize = targetCameraSize;
+
+        lastTouchDistance = dist;
+    }
+}
+
 function onMouseUp(ev: MouseEvent) {
+    isDragging = false;
+}
+
+function onTouchEnd(ev: TouchEvent) {
     isDragging = false;
 }
 
