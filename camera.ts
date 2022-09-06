@@ -1,6 +1,7 @@
 let isDragging: boolean; // Is the user moving the 2d view?
 let lastMousePos: vec2; // Last drag position
 let lastTouchDistance: number; // Lastdistance between touches (for zoom)
+let lastTouchCount: number;
 
 let cameraPos: vec2 = new vec2(0); // position of the camera
 let cameraSize: number = 1; // sizo of the camera (its height)
@@ -76,25 +77,36 @@ function onMouseMove(ev: MouseEvent) {
 function onTouchMove(ev: TouchEvent) {
     let touchCount = ev.touches.length;
 
-    if (touchCount === 1) { // Move view
-        let touch = ev.touches[0];
+    // Ignore if touch count changed
+    if (lastTouchCount == touchCount) {
+        // Move view
+        let sumX = 0;
+        let sumY = 0;
+        for (let i = 0; i < touchCount; i++)
+        {
+            sumX = ev.touches[i].clientX;
+            sumY = ev.touches[i].clientY;
+        }
 
-        let newPos = new vec2(touch.clientX, touch.clientY);
+        let newPos = new vec2(sumX / touchCount, sumY / touchCount);
         let delta = newPos.sub(lastMousePos).divide(canvasSize.y).mult(cameraSize * 2);
         delta.x *= -1;
         cameraPos = cameraPos.add(delta);
         lastMousePos = newPos;
-    }
-    else if (touchCount === 2) { // Zoom
-        let touch0Pos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
-        let touch1Pos = new vec2(ev.touches[1].clientX, ev.touches[1].clientY);
-        let dist = touch1Pos.sub(touch0Pos).len();
+        
+        if (touchCount === 2) { // Zoom
+            let touch0Pos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
+            let touch1Pos = new vec2(ev.touches[1].clientX, ev.touches[1].clientY);
+            let dist = touch1Pos.sub(touch0Pos).len();
 
-        targetCameraSize *= lastTouchDistance / dist;
-        cameraSize = targetCameraSize;
+            targetCameraSize *= lastTouchDistance / dist;
+            cameraSize = targetCameraSize;
 
-        lastTouchDistance = dist;
+            lastTouchDistance = dist;
+        }
     }
+    
+    lastTouchCount = touchCount;
 }
 
 function onMouseUp(ev: MouseEvent) {

@@ -74,18 +74,15 @@ function CreateRenderers() {
         new Renderer("Mandelbrot", [
             new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", new vec2(0)),
             new Prop("mdb_iterations", "Nombre d'iterations", 100),
-            new Prop("mdb_tolerance", "Tolérance", 3),
         ]),
         new Renderer("Julia", [
             new Prop("mdb_val", "Constante C", new vec2(0.15, 0.6)),
             new Prop("mdb_iterations", "Nombre d'iterations", 100),
-            new Prop("mdb_tolerance", "Tolérance", 3),
         ]),
         new Renderer("Mandelbulb", [
             new Prop("blb_power", "Puissance", 5),
             new Prop("blb_z", "Position Z", 0),
             new Prop("blb_iterations", "Nombre d'iterations", 15),
-            new Prop("blb_tolerance", "Tolérance", 2),
         ]),
     ];
 }

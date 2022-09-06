@@ -11,11 +11,9 @@ uniform highp float treshold;
 // Mandelbrot & julia
 uniform highp vec2 mdb_val;
 uniform highp float mdb_iterations;
-uniform highp float mdb_tolerance;
 
 // Mandelbulb
 uniform highp float blb_iterations;
-uniform highp float blb_tolerance;
 uniform highp float blb_power;
 uniform highp float blb_z;
 
@@ -55,7 +53,7 @@ highp float mandelbrot() {
 
         Z = newZ + pos;
 
-        if (abs((Z - mdb_val).x) + abs((Z - mdb_val).y) > mdb_tolerance)
+        if (abs((Z - mdb_val).x) + abs((Z - mdb_val).y) > 2.0)
         {
             return float(i) / mdb_iterations;
         }
@@ -78,7 +76,7 @@ highp float julia() {
 
         Z = newZ + mdb_val;
 
-        if (length(Z) > mdb_tolerance)
+        if (dot(Z, Z) > 4.0)
         {
             return float(i) / mdb_iterations;
         }
@@ -105,7 +103,7 @@ highp float mandelbulb() {
         if (float(i) > blb_iterations) break;
 
         r = length(Z);
-        if (r > blb_tolerance) break;
+        if (r > 2.0) break;
 
         highp float theta = acos(Z.z / r) * blb_power;
         highp float phi = atan2(Z.y, Z.x) * blb_power;
