@@ -77,22 +77,22 @@ function onMouseMove(ev: MouseEvent) {
 function onTouchMove(ev: TouchEvent) {
     let touchCount = ev.touches.length;
 
+    let sumX = 0;
+    let sumY = 0;
+    for (let i = 0; i < touchCount; i++)
+    {
+        sumX = ev.touches[i].clientX;
+        sumY = ev.touches[i].clientY;
+    }
+
+    let newPos = new vec2(sumX / touchCount, sumY / touchCount);
+
     // Ignore if touch count changed
     if (lastTouchCount == touchCount) {
         // Move view
-        let sumX = 0;
-        let sumY = 0;
-        for (let i = 0; i < touchCount; i++)
-        {
-            sumX = ev.touches[i].clientX;
-            sumY = ev.touches[i].clientY;
-        }
-
-        let newPos = new vec2(sumX / touchCount, sumY / touchCount);
         let delta = newPos.sub(lastMousePos).divide(canvasSize.y).mult(cameraSize * 2);
         delta.x *= -1;
         cameraPos = cameraPos.add(delta);
-        lastMousePos = newPos;
         
         if (touchCount === 2) { // Zoom
             let touch0Pos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
@@ -106,6 +106,7 @@ function onTouchMove(ev: TouchEvent) {
         }
     }
     
+    lastMousePos = newPos;
     lastTouchCount = touchCount;
 }
 
