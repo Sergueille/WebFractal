@@ -41,40 +41,37 @@ void main() {
 
 highp float mandelbrot() {
     highp vec2 Z = mdb_val;
+    int iterations = int(mdb_iterations);
     const int maxIter = 10000;
     for (int i = 0; i < maxIter; i++)
     {
-        if (float(i) > mdb_iterations) break;
+        if (i > iterations) 
+            return (mdb_iterations - 1.0) / mdb_iterations;
 
-        highp vec2 newZ = vec2(
+        Z = vec2(
             (Z.x * Z.x) - (Z.y * Z.y),
             2.0 * Z.x * Z.y
-        );
+        ) + pos;
 
-        Z = newZ + pos;
-
-        if (abs((Z - mdb_val).x) + abs((Z - mdb_val).y) > 2.0)
+        if (dot(Z, Z) > 2.0)
         {
             return float(i) / mdb_iterations;
         }
     }
-
-    return (mdb_iterations - 1.0) / mdb_iterations;
 }
 
 highp float julia() {
     highp vec2 Z = pos;
+    int iterations = int(mdb_iterations);
     const int maxIter = 10000;
     for (int i = 0; i < maxIter; i++)
     {
-        if (float(i) > mdb_iterations) break;
+        if (i > iterations) break;
 
-        highp vec2 newZ = vec2(
+        Z = vec2(
             (Z.x * Z.x) - (Z.y * Z.y),
             2.0 * Z.x * Z.y
-        );
-
-        Z = newZ + mdb_val;
+        ) + mdb_val;
 
         if (dot(Z, Z) > 4.0)
         {

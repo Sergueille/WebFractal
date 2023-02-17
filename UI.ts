@@ -10,6 +10,8 @@ const colorTreshold = document.getElementById("color-treshold")!! as HTMLInputEl
 const exportSizeTypeSelect = document.getElementById("export-size-type") as HTMLSelectElement;
 const exportSizeXInput = document.getElementById("export-size-x") as HTMLInputElement;
 const exportSizeYInput = document.getElementById("export-size-y") as HTMLInputElement;
+const fps = document.getElementById("fps") as HTMLInputElement;
+
 let selectedRenderer = 0;
 let currentRenderer: Renderer;
 let currentRendererID: number;
@@ -23,6 +25,8 @@ let control: boolean;
 
 const innerPanels : { [id: string] : HTMLElement; } = {};
 let currentSubPanel : HTMLElement | null = null;
+
+let showFPS = false;
 
 enum ExportSizeType {
     screenSize,
@@ -80,8 +84,8 @@ function changeRenderer(id: number) {
 }
 
 function UpdateUI() {
-    if (shaderLoaded("quad")){
-        let shader = getShader("quad");
+    if (shaderLoaded("main")){
+        let shader = getShader("main");
 
         currentRenderer.SetUniforms(shader);
         GL.uniform3fv(getShaderUniform(shader, "colorA"), hexToRgb(colorInputA.value));
@@ -163,4 +167,9 @@ function HideExportCustomSize() {
         if (exportSizeYInput.parentElement)
             exportSizeYInput.parentElement.style.display = "none";
     }
+}
+
+function ToggleFPS() {
+    showFPS = !showFPS;
+    fps.classList.toggle("hidden");
 }

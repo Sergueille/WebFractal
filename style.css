@@ -149,7 +149,7 @@ input[type=number] {
     margin-bottom: 10px !important;
 }
 
-#panel-wrapper.hidden, #show-panel.hidden {
+.hidden {
     opacity: 0;
     transform: translateY(-100px);
     pointer-events: none;
@@ -207,7 +207,19 @@ input[type=number] {
     margin: 0 -10px 0 -10px;
 }
 
-@media screen and (max-width: 450px) {
+#fps {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    background-color: var(--bg);
+    border-radius: 10px;
+    padding: 5px 10px;
+    pointer-events: none;
+    transition: 200ms;
+}
+
+@media screen and (max-width: 550px) {
     #panel-wrapper {
         top: 0;
         left: 0;
@@ -217,5 +229,11 @@ input[type=number] {
 
     .panel {
         border-radius: 0;
+    }
+
+    #fps {
+        top: unset;
+        bottom: 5px;
+        left: 5px;
     }
 }

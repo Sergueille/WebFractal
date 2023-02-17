@@ -10,7 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const SHADERS = {};
 function initShaders() {
-    createShaderFromFile("quadVtex.glsl", "quadFrag.glsl", "quad");
+    createShaderFromFile("quadVtex.glsl", "mainFrag.glsl", "main");
+    createShaderFromFile("quadVtex.glsl", "blurFrag.glsl", "blur");
 }
 function useShader(shader) {
     GL.useProgram(shader);
@@ -32,7 +33,7 @@ function getShaderAttribute(shader, attribName) {
 function getShaderUniform(shader, uniformName) {
     let res = GL.getUniformLocation(shader, uniformName);
     if (!res)
-        console.error(`Shader uniform '${uniformName}' not found!`);
+        console.error(`Shader uniform '${uniformName}' not found! (may have been removed automatically if not used in shader)`);
     return res;
 }
 function getShader(shaderName) {
@@ -52,16 +53,16 @@ function createShaderFromFile(vFile, fFile, shaderName) {
             console.error(`Couldn't load shader sources at ${vFile} and ${fFile}`);
             return;
         }
-        let newShader = createShaderFromSource(vText, fText);
+        let newShader = createShaderFromSource(vText, fText, shaderName);
         if (newShader != null)
             SHADERS[shaderName] = newShader;
         return newShader;
     });
 }
 // Compiles a shader program from source
-function createShaderFromSource(vSource, fSource) {
-    const vertexShader = loadShader(GL.VERTEX_SHADER, vSource);
-    const fragmentShader = loadShader(GL.FRAGMENT_SHADER, fSource);
+function createShaderFromSource(vSource, fSource, shaderName) {
+    const vertexShader = loadShader(GL.VERTEX_SHADER, vSource, shaderName);
+    const fragmentShader = loadShader(GL.FRAGMENT_SHADER, fSource, shaderName);
     if (!vertexShader || !fragmentShader)
         return null;
     const shaderProgram = GL.createProgram();
@@ -69,19 +70,19 @@ function createShaderFromSource(vSource, fSource) {
     GL.attachShader(shaderProgram, fragmentShader);
     GL.linkProgram(shaderProgram);
     if (!GL.getProgramParameter(shaderProgram, GL.LINK_STATUS)) {
-        console.error("Couldn't init shader program: " + GL.getProgramInfoLog(shaderProgram));
+        console.error(`Couldn't init shader program for ${shaderName}:\n${GL.getProgramInfoLog(shaderProgram)}`);
         return null;
     }
     return shaderProgram;
 }
 // Compiles a single shader
-function loadShader(type, source) {
+function loadShader(type, source, shaderName) {
     const shader = GL.createShader(type);
     GL.shaderSource(shader, source);
     GL.compileShader(shader);
     // Vérifier s'il a ét compilé avec succès
     if (!GL.getShaderParameter(shader, GL.COMPILE_STATUS)) {
-        console.error("Couldn't compile shader: \n" + GL.getShaderInfoLog(shader));
+        console.error(`Couldn't compile shader for ${shaderName}:\n${GL.getShaderInfoLog(shader)}`);
         GL.deleteShader(shader);
         return null;
     }

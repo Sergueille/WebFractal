@@ -71,6 +71,7 @@
 
 <body>
     <canvas id="canvas"></canvas>
+    <div id="fps" class="hidden">00ms (00 FPS)</div>
     <div id="panel-wrapper">
         <div class="panel" id="main-panel">
             <div class="inner-panel" id="props-panel">
@@ -113,6 +114,9 @@
                     </button>
                     <button class="circle" onclick="OpenSubPanel('export-panel')">
                         <span class="material-symbols-outlined">upload</span>
+                    </button>
+                    <button class="circle" onclick="ToggleFPS()">
+                        <span class="material-symbols-outlined">avg_time</span>
                     </button>
                 </div>
             </div>

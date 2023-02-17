@@ -5,6 +5,6 @@ uniform vec2 camPos;
 uniform float camSize;
 
 void main() {
-    gl_Position = vPos;
+    gl_Position = vec4(vPos.xy, 0.0, 1.0);
     pos = (vec2(vPos.x * ratio, vPos.y) * camSize) + camPos;
 }

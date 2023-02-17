@@ -11,6 +11,7 @@ const colorTreshold = document.getElementById("color-treshold");
 const exportSizeTypeSelect = document.getElementById("export-size-type");
 const exportSizeXInput = document.getElementById("export-size-x");
 const exportSizeYInput = document.getElementById("export-size-y");
+const fps = document.getElementById("fps");
 let selectedRenderer = 0;
 let currentRenderer;
 let currentRendererID;
@@ -21,6 +22,7 @@ let shift;
 let control;
 const innerPanels = {};
 let currentSubPanel = null;
+let showFPS = false;
 var ExportSizeType;
 (function (ExportSizeType) {
     ExportSizeType[ExportSizeType["screenSize"] = 0] = "screenSize";
@@ -67,8 +69,8 @@ function changeRenderer(id) {
     renderers[id].CreateUI();
 }
 function UpdateUI() {
-    if (shaderLoaded("quad")) {
-        let shader = getShader("quad");
+    if (shaderLoaded("main")) {
+        let shader = getShader("main");
         currentRenderer.SetUniforms(shader);
         GL.uniform3fv(getShaderUniform(shader, "colorA"), hexToRgb(colorInputA.value));
         GL.uniform3fv(getShaderUniform(shader, "colorB"), hexToRgb(colorInputB.value));
@@ -137,4 +139,8 @@ function HideExportCustomSize() {
         if (exportSizeYInput.parentElement)
             exportSizeYInput.parentElement.style.display = "none";
     }
+}
+function ToggleFPS() {
+    showFPS = !showFPS;
+    fps.classList.toggle("hidden");
 }

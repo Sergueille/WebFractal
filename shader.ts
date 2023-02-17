@@ -1,7 +1,8 @@
 const SHADERS: { [id: string] : WebGLShader; } = {}
 
 function initShaders() {
-    createShaderFromFile("quadVtex.glsl", "quadFrag.glsl", "quad")
+    createShaderFromFile("quadVtex.glsl", "mainFrag.glsl", "main")
+    createShaderFromFile("quadVtex.glsl", "blurFrag.glsl", "blur")
 }
 
 function useShader(shader: WebGLShader): WebGLShader {
@@ -29,7 +30,7 @@ function getShaderUniform(shader: WebGLShader, uniformName: string): WebGLUnifor
     let res = GL.getUniformLocation(shader, uniformName);
 
     if (!res)
-        console.error(`Shader uniform '${uniformName}' not found!`);
+        console.error(`Shader uniform '${uniformName}' not found! (may have been removed automatically if not used in shader)`);
 
     return res;
 }
@@ -56,7 +57,7 @@ async function createShaderFromFile(vFile: string, fFile: string, shaderName: st
         return;
     }
 
-    let newShader = createShaderFromSource(vText, fText);
+    let newShader = createShaderFromSource(vText, fText, shaderName);
     if (newShader != null)
         SHADERS[shaderName] = newShader;
 
@@ -64,9 +65,9 @@ async function createShaderFromFile(vFile: string, fFile: string, shaderName: st
 }
 
 // Compiles a shader program from source
-function createShaderFromSource(vSource: string, fSource: string): WebGLShader | null {
-    const vertexShader = loadShader(GL.VERTEX_SHADER, vSource);
-    const fragmentShader = loadShader(GL.FRAGMENT_SHADER, fSource);
+function createShaderFromSource(vSource: string, fSource: string, shaderName: string): WebGLShader | null {
+    const vertexShader = loadShader(GL.VERTEX_SHADER, vSource, shaderName);
+    const fragmentShader = loadShader(GL.FRAGMENT_SHADER, fSource, shaderName);
 
     if (!vertexShader || !fragmentShader)
         return null;
@@ -77,7 +78,7 @@ function createShaderFromSource(vSource: string, fSource: string): WebGLShader |
     GL.linkProgram(shaderProgram);
 
     if (!GL.getProgramParameter(shaderProgram, GL.LINK_STATUS)) {
-        console.error("Couldn't init shader program: " + GL.getProgramInfoLog(shaderProgram));
+        console.error(`Couldn't init shader program for ${shaderName}:\n${GL.getProgramInfoLog(shaderProgram)}`);
         return null;
     }
     
@@ -86,7 +87,7 @@ function createShaderFromSource(vSource: string, fSource: string): WebGLShader |
 
 
 // Compiles a single shader
-function loadShader(type: number, source: string): WebGLShader | null {
+function loadShader(type: number, source: string, shaderName: string): WebGLShader | null {
     const shader = GL.createShader(type)!!;
   
     GL.shaderSource(shader, source);
@@ -94,7 +95,7 @@ function loadShader(type: number, source: string): WebGLShader | null {
   
     // Vérifier s'il a ét compilé avec succès
     if (!GL.getShaderParameter(shader, GL.COMPILE_STATUS)) {
-        console.error("Couldn't compile shader: \n" + GL.getShaderInfoLog(shader));
+        console.error(`Couldn't compile shader for ${shaderName}:\n${GL.getShaderInfoLog(shader)}`);
         GL.deleteShader(shader);
         return null;
     }
