@@ -53,7 +53,7 @@ highp float mandelbrot() {
             2.0 * Z.x * Z.y
         ) + pos;
 
-        if (dot(Z, Z) > 2.0)
+        if (dot(Z, Z) > 4.0)
         {
             return float(i) / mdb_iterations;
         }

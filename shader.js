@@ -11,7 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const SHADERS = {};
 function initShaders() {
     createShaderFromFile("quadVtex.glsl", "mainFrag.glsl", "main");
-    createShaderFromFile("quadVtex.glsl", "blurFrag.glsl", "blur");
+    createShaderFromFile("blitVtex.glsl", "blurFrag.glsl", "blur");
+    createShaderFromFile("blitVtex.glsl", "blitFrag.glsl", "blit");
 }
 function useShader(shader) {
     GL.useProgram(shader);
@@ -36,6 +37,11 @@ function getShaderUniform(shader, uniformName) {
         console.error(`Shader uniform '${uniformName}' not found! (may have been removed automatically if not used in shader)`);
     return res;
 }
+function setTexture(shader, uniformName, texture, textureID) {
+    GL.uniform1i(getShaderUniform(shader, uniformName), textureID);
+    GL.activeTexture(GL.TEXTURE0 + textureID);
+    GL.bindTexture(GL.TEXTURE_2D, texture);
+}
 function getShader(shaderName) {
     let res = SHADERS[shaderName];
     if (!res) {
@@ -45,9 +51,9 @@ function getShader(shaderName) {
 }
 function createShaderFromFile(vFile, fFile, shaderName) {
     return __awaiter(this, void 0, void 0, function* () {
-        let vResponse = yield fetch(vFile);
+        let vResponse = yield fetch("shaders/" + vFile);
         let vText = yield vResponse.text();
-        let fResponse = yield fetch(fFile);
+        let fResponse = yield fetch("shaders/" + fFile);
         let fText = yield fResponse.text();
         if (!vText || !fText) {
             console.error(`Couldn't load shader sources at ${vFile} and ${fFile}`);

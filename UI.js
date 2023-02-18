@@ -61,6 +61,7 @@ function togglePanel() {
 }
 function changeRendererEvent(ev) {
     changeRenderer(+ev.target.value);
+    propsChangedSinceLastFrame = true;
 }
 function changeRenderer(id) {
     currentRenderer = renderers[id];
@@ -101,6 +102,7 @@ function AddButton(ev, direction, int) {
             value += addBtnSpeed * deltaTime * direction;
             value = Math.round(value * 1000) / 1000;
         }
+        propsChangedSinceLastFrame = true;
         input.value = value.toString();
         input.dispatchEvent(new Event('change'));
     }, 0);

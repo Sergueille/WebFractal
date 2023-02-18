@@ -2,7 +2,8 @@ const SHADERS: { [id: string] : WebGLShader; } = {}
 
 function initShaders() {
     createShaderFromFile("quadVtex.glsl", "mainFrag.glsl", "main")
-    createShaderFromFile("quadVtex.glsl", "blurFrag.glsl", "blur")
+    createShaderFromFile("blitVtex.glsl", "blurFrag.glsl", "blur")
+    createShaderFromFile("blitVtex.glsl", "blitFrag.glsl", "blit")
 }
 
 function useShader(shader: WebGLShader): WebGLShader {
@@ -35,6 +36,12 @@ function getShaderUniform(shader: WebGLShader, uniformName: string): WebGLUnifor
     return res;
 }
 
+function setTexture(shader: WebGLShader, uniformName: string, texture: WebGLTexture, textureID: number) {
+    GL.uniform1i(getShaderUniform(shader, uniformName), textureID);
+    GL.activeTexture(GL.TEXTURE0 + textureID);
+    GL.bindTexture(GL.TEXTURE_2D, texture);
+}
+
 function getShader(shaderName: string) {
     let res = SHADERS[shaderName];
 
@@ -46,10 +53,10 @@ function getShader(shaderName: string) {
 }
 
 async function createShaderFromFile(vFile: string, fFile: string, shaderName: string) {
-    let vResponse = await fetch(vFile)
+    let vResponse = await fetch("shaders/" + vFile)
     let vText = await vResponse.text();
 
-    let fResponse = await fetch(fFile)
+    let fResponse = await fetch("shaders/" + fFile)
     let fText = await fResponse.text();
 
     if (!vText || !fText) {

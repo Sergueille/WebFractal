@@ -33,10 +33,12 @@ class Prop {
             let vec = this.value;
             res.querySelector(".prop-val-x").addEventListener("change", (ev) => {
                 vec.x = +ev.target.value;
+                propsChangedSinceLastFrame = true;
             });
             res.querySelector(".prop-val-x").value = vec.x.toString();
             res.querySelector(".prop-val-y").addEventListener("change", (ev) => {
                 vec.y = +ev.target.value;
+                propsChangedSinceLastFrame = true;
             });
             res.querySelector(".prop-val-y").value = vec.y.toString();
         }
@@ -46,6 +48,7 @@ class Prop {
             let thisInt = this;
             res.querySelector(".prop-val").addEventListener("change", (ev) => {
                 thisInt.value = +ev.target.value;
+                propsChangedSinceLastFrame = true;
             });
             res.querySelector(".prop-val").value = thisInt.value.toString();
         }
@@ -73,11 +76,11 @@ function CreateRenderers() {
     renderers = [
         new Renderer("Mandelbrot", [
             new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", new vec2(0)),
-            new Prop("mdb_iterations", "Nombre d'iterations", 100),
+            new Prop("mdb_iterations", "Nombre d'iterations", 400),
         ]),
         new Renderer("Julia", [
             new Prop("mdb_val", "Constante C", new vec2(0.15, 0.6)),
-            new Prop("mdb_iterations", "Nombre d'iterations", 100),
+            new Prop("mdb_iterations", "Nombre d'iterations", 400),
         ]),
         new Renderer("Mandelbulb", [
             new Prop("blb_power", "Puissance", 5),

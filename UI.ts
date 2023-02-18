@@ -74,6 +74,7 @@ function togglePanel() {
 
 function changeRendererEvent(ev: Event) {
     changeRenderer(+(ev!!.target!! as HTMLSelectElement).value);
+    propsChangedSinceLastFrame = true;
 }
 
 function changeRenderer(id: number) {
@@ -121,6 +122,8 @@ function AddButton(ev: Event, direction: number, int: boolean) {
             value += addBtnSpeed * deltaTime * direction;
             value = Math.round(value * 1000) / 1000;
         }
+
+        propsChangedSinceLastFrame = true;
     
         input.value = value.toString();
         input.dispatchEvent(new Event('change'));

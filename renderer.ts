@@ -44,10 +44,12 @@ class Prop<T> {
             let vec = this.value as vec2;
             res.querySelector(".prop-val-x")!!.addEventListener("change", (ev: Event) => {
                 vec.x = +(ev!!.target!! as HTMLInputElement).value;
+                propsChangedSinceLastFrame = true;
             });
             (res.querySelector(".prop-val-x")!! as HTMLInputElement).value = vec.x.toString();
             res.querySelector(".prop-val-y")!!.addEventListener("change", (ev: Event) => {
                 vec.y = +(ev!!.target!! as HTMLInputElement).value;
+                propsChangedSinceLastFrame = true;
             });
             (res.querySelector(".prop-val-y")!! as HTMLInputElement).value = vec.y.toString();
         }
@@ -58,6 +60,7 @@ class Prop<T> {
             let thisInt = this as unknown as Prop<number>;
             res.querySelector(".prop-val")!!.addEventListener("change", (ev: Event) => {
                 thisInt.value = +(ev!!.target!! as HTMLInputElement).value;
+                propsChangedSinceLastFrame = true;
             });
             (res.querySelector(".prop-val")!! as HTMLInputElement).value =  thisInt.value.toString();
         }
@@ -89,11 +92,11 @@ function CreateRenderers() {
     renderers = [
         new Renderer("Mandelbrot", [
             new Prop<vec2>("mdb_val", "Valeur de départ (Z<sub>0</sub>)", new vec2(0)),
-            new Prop<number>("mdb_iterations", "Nombre d'iterations", 100),
+            new Prop<number>("mdb_iterations", "Nombre d'iterations", 400),
         ]),
         new Renderer("Julia", [
             new Prop<vec2>("mdb_val", "Constante C", new vec2(0.15, 0.6)),
-            new Prop<number>("mdb_iterations", "Nombre d'iterations", 100),
+            new Prop<number>("mdb_iterations", "Nombre d'iterations", 400),
         ]),
         new Renderer("Mandelbulb", [
             new Prop<number>("blb_power", "Puissance", 5),
