@@ -18,6 +18,7 @@ let frame = 0;
 let lastCamPos;
 let lastCamSize;
 let propsChangedSinceLastFrame;
+let renderDuration;
 let renderLoopHandle;
 CreateContext();
 CreateQuad();
@@ -96,6 +97,18 @@ function RenderLoop() {
     updateCamera();
     if (showFPS)
         fps.innerHTML = `${Math.round(deltaTime * 1000)}ms (${Math.round(1 / deltaTime)} FPS)`;
+    if (isShowingSlowMessage) {
+        if (discardedSlowMessage) { // Fast enough
+            slowMessage.classList.add("hidden");
+            isShowingSlowMessage = false;
+        }
+    }
+    else {
+        if (time > 2 && deltaTime * 1000 > 100 && !discardedSlowMessage) { // Too slow
+            slowMessage.classList.remove("hidden");
+            isShowingSlowMessage = true;
+        }
+    }
     lastTime = time;
     frame++;
     renderLoopHandle = window.requestAnimationFrame(RenderLoop);

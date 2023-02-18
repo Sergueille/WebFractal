@@ -21,6 +21,8 @@ let lastCamPos: vec2;
 let lastCamSize: number;
 let propsChangedSinceLastFrame: boolean;
 
+let renderDuration;
+
 let renderLoopHandle: number;
 
 CreateContext();
@@ -104,7 +106,7 @@ function Render() {
         }
 
         GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
-        
+
         propsChangedSinceLastFrame = false;
     }
 }
@@ -122,6 +124,19 @@ function RenderLoop() {
 
     if (showFPS)
         fps.innerHTML = `${Math.round(deltaTime * 1000)}ms (${Math.round(1 / deltaTime)} FPS)`
+
+    if (isShowingSlowMessage) {
+        if (discardedSlowMessage) { // Fast enough
+            slowMessage.classList.add("hidden")
+            isShowingSlowMessage = false;
+        }
+    }
+    else {
+        if (time > 2 && deltaTime * 1000 > 100 && !discardedSlowMessage) { // Too slow
+            slowMessage.classList.remove("hidden")
+            isShowingSlowMessage = true;
+        }
+    }
 
     lastTime = time;
     frame++;

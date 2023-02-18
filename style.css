@@ -78,7 +78,7 @@ input {
     box-shadow: var(--prim) 0 0 0 0;
 }
 
-input:hover, input:focus {
+*:focus-visible {
     outline: none;
     box-shadow: var(--prim) 0 0 0 2px;
 }
@@ -131,7 +131,7 @@ input[type=number] {
     background-color: var(--bg);
     border-radius: 10px;
     overflow: hidden;
-    height: 200px;
+    height: 0px;
 
     transition: 200ms;
 }
@@ -145,7 +145,20 @@ input[type=number] {
     transition: 200ms;
 }
 
-#panel-wrapper > *, .inner-panel > *, .prop > *, #params > *{
+.panel.message {
+    height: calc(3.9rem + 20px);
+    line-height: 1.3rem;
+}
+
+.panel.message > * > .row {
+    height: calc(3.9rem);
+}
+
+#panel-wrapper > * {
+    margin-bottom: 10px;
+}
+
+.inner-panel > *, .prop > *, #params > *{
     margin-bottom: 10px !important;
 }
 
@@ -219,6 +232,12 @@ input[type=number] {
     transition: 200ms;
 }
 
+.small-txt {
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    color: var(--txt-d);
+}
+
 @media screen and (max-width: 550px) {
     #panel-wrapper {
         top: 0;
@@ -229,6 +248,11 @@ input[type=number] {
 
     .panel {
         border-radius: 0;
+        margin-bottom: 0 !important;
+    }
+
+    .panel:not(#main-panel) {
+        border-top: 2px solid var(--bg-ll);
     }
 
     #fps {

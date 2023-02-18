@@ -168,6 +168,19 @@
                     <button class="circle" onclick="Export()">
                         <span class="material-symbols-outlined">done</span>
                     </button>
+                    <span class="small-txt">Le rendu pourra prendre jusqu'à quelques secondes</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel message hidden" id="slow-message">
+            <div class="inner-panel">
+                <div class="row">
+                    <span>Si votre appareil est trop lent, baissez le "nombre d'itérations" pour avoir un rendu plus rapide.</span>
+                    <button class="circle" onclick="discardedSlowMessage = true">
+                        <span class="material-symbols-outlined" onclick="CloseMessage()">
+                            close
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>

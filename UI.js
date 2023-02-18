@@ -12,6 +12,7 @@ const exportSizeTypeSelect = document.getElementById("export-size-type");
 const exportSizeXInput = document.getElementById("export-size-x");
 const exportSizeYInput = document.getElementById("export-size-y");
 const fps = document.getElementById("fps");
+const slowMessage = document.getElementById("slow-message");
 let selectedRenderer = 0;
 let currentRenderer;
 let currentRendererID;
@@ -23,6 +24,8 @@ let control;
 const innerPanels = {};
 let currentSubPanel = null;
 let showFPS = false;
+let isShowingSlowMessage = false;
+let discardedSlowMessage = false;
 var ExportSizeType;
 (function (ExportSizeType) {
     ExportSizeType[ExportSizeType["screenSize"] = 0] = "screenSize";
@@ -47,6 +50,7 @@ function initUI() {
         innerPanels[child.id] = child;
         innerPanels[child.id].style.opacity = "0";
         innerPanels[child.id].style.left = "100%";
+        SetFocus(innerPanels[child.id], false);
     }
     OpenSubPanel("props-panel");
     HideExportCustomSize();
@@ -121,10 +125,12 @@ function OpenSubPanel(id) {
             currentSubPanel.style.left = "100%";
             currentSubPanel.style.right = "-100%";
         }
+        SetFocus(currentSubPanel, false);
     }
     innerPanels[id].style.opacity = "1";
     innerPanels[id].style.left = "0";
     innerPanels[id].style.right = "0";
+    SetFocus(innerPanels[id], true);
     currentSubPanel = innerPanels[id];
 }
 function HideExportCustomSize() {
@@ -145,4 +151,13 @@ function HideExportCustomSize() {
 function ToggleFPS() {
     showFPS = !showFPS;
     fps.classList.toggle("hidden");
+}
+function SetFocus(element, focusEnabled) {
+    if (focusEnabled)
+        element.removeAttribute("tabindex");
+    else
+        element.setAttribute("tabindex", "-1");
+    for (let child of element.children) {
+        SetFocus(child, focusEnabled);
+    }
 }

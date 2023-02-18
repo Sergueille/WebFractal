@@ -76,10 +76,17 @@ function CreateRenderers() {
     renderers = [
         new Renderer("Mandelbrot", [
             new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", new vec2(0)),
+            new Prop("mdb_offset", "Multiplicateur", 2),
             new Prop("mdb_iterations", "Nombre d'iterations", 400),
         ]),
         new Renderer("Julia", [
             new Prop("mdb_val", "Constante C", new vec2(0.15, 0.6)),
+            new Prop("mdb_offset", "Multiplicateur", 2),
+            new Prop("mdb_iterations", "Nombre d'iterations", 400),
+        ]),
+        new Renderer("Burning ship", [
+            new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", new vec2(0)),
+            new Prop("mdb_offset", "Multiplicateur", 2),
             new Prop("mdb_iterations", "Nombre d'iterations", 400),
         ]),
         new Renderer("Mandelbulb", [
