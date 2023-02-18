@@ -103,7 +103,9 @@ function Render() {
             setTexture(blitShader, "tex", cumulTextureB, 0);
         }
 
-        GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4)
+        GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
+        
+        propsChangedSinceLastFrame = false;
     }
 }
 
@@ -123,7 +125,6 @@ function RenderLoop() {
 
     lastTime = time;
     frame++;
-    propsChangedSinceLastFrame = false;
 
     renderLoopHandle = window.requestAnimationFrame(RenderLoop);
 }
@@ -188,6 +189,8 @@ function CreateBufferAndTextures() {
     cumulbufferB = GL.createFramebuffer()!!;
     GL.bindFramebuffer(GL.FRAMEBUFFER, cumulbufferB);
     GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, cumulTextureB, 0);  
+
+    propsChangedSinceLastFrame = true; // Make sure to render the fractal without antialiasing
 }
 
 function CreateRenderTexture(width: number, height: number): WebGLTexture {
