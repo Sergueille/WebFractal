@@ -2,9 +2,9 @@ let renderers: Array<Renderer>;
 
 class Renderer {
     public name: string = "";
-    public props: Array<Prop<any>> = [];
+    public props: Array<Prop> = [];
 
-    constructor(name: string, props: Array<Prop<any>>) {
+    constructor(name: string, props: Array<Prop>) {
         this.name = name;
         this.props = props;
     }
@@ -22,14 +22,22 @@ class Renderer {
     }
 }
 
-class Prop<T> {
+enum ValType {
+    Int,
+    Float,
+    Vec2,
+}
+
+class Prop {
     public uniformName: string;
     public displayName: string;
-    public value: T;
+    public type: ValType; 
+    public value: any;
 
-    constructor(uniformName: string, displayName: string, def: T) {
+    constructor(uniformName: string, displayName: string, type: ValType, def: any) {
         this.uniformName = uniformName;
         this.displayName = displayName;
+        this.type = type;
         this.value = def;
     }
 
@@ -37,7 +45,7 @@ class Prop<T> {
     public GetElement(): HTMLElement {
         let res: HTMLElement;
 
-        if (this.value instanceof vec2) {
+        if (this.type == ValType.Vec2) {
             let tempalte = document.getElementById("vec2-prop")!! as HTMLTemplateElement;
             res = tempalte.content.cloneNode(true) as HTMLElement;
 
@@ -53,16 +61,16 @@ class Prop<T> {
             });
             (res.querySelector(".prop-val-y")!! as HTMLInputElement).value = vec.y.toString();
         }
-        else if (this instanceof Prop<number>) {
-            let tempalte = document.getElementById("float-prop")!! as HTMLTemplateElement;
+        else if (this.type == ValType.Float || this.type == ValType.Int) {
+            let tempId = this.type == ValType.Float ? "float-prop" : "int-prop";
+            let tempalte = document.getElementById(tempId)!! as HTMLTemplateElement;
             res = tempalte.content.cloneNode(true) as HTMLElement;
 
-            let thisInt = this as unknown as Prop<number>;
             res.querySelector(".prop-val")!!.addEventListener("change", (ev: Event) => {
-                thisInt.value = +(ev!!.target!! as HTMLInputElement).value;
+                this.value = +(ev!!.target!! as HTMLInputElement).value;
                 propsChangedSinceLastFrame = true;
             });
-            (res.querySelector(".prop-val")!! as HTMLInputElement).value =  thisInt.value.toString();
+            (res.querySelector(".prop-val")!! as HTMLInputElement).value = this.value.toString();
         }
         else {
             throw "Unknown prop type!"
@@ -75,12 +83,14 @@ class Prop<T> {
 
     // Set the uniform of a shader with the prop's values
     public SetUniform(shader: WebGLShader) {
-        if (this.value instanceof vec2) {
+        if (this.type == ValType.Vec2) {
             GL.uniform2f(getShaderUniform(shader, this.uniformName), this.value.x, this.value.y);
         }
-        else if (this instanceof Prop<number>) {
-            let thisInt = this as unknown as Prop<number>;
-            GL.uniform1f(getShaderUniform(shader, this.uniformName), thisInt.value);
+        else if (this.type == ValType.Float) {
+            GL.uniform1f(getShaderUniform(shader, this.uniformName), this.value);
+        }
+        else if (this.type == ValType.Int) {
+            GL.uniform1f(getShaderUniform(shader, this.uniformName), this.value);
         }
         else {
             throw "Unknown prop type!"
@@ -91,24 +101,24 @@ class Prop<T> {
 function CreateRenderers() {
     renderers = [
         new Renderer("Mandelbrot", [
-            new Prop<vec2>("mdb_val", "Valeur de départ (Z<sub>0</sub>)", new vec2(0)),
-            new Prop<number>("mdb_offset", "Multiplicateur", 2),
-            new Prop<number>("mdb_iterations", "Nombre d'iterations", 400),
+            new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", ValType.Vec2, new vec2(0)),
+            new Prop("mdb_offset", "Multiplicateur", ValType.Float, 2),
+            new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 400),
         ]),
         new Renderer("Julia", [
-            new Prop<vec2>("mdb_val", "Constante C", new vec2(0.15, 0.6)),
-            new Prop<number>("mdb_offset", "Multiplicateur", 2),
-            new Prop<number>("mdb_iterations", "Nombre d'iterations", 400),
+            new Prop("mdb_val", "Constante C", ValType.Vec2, new vec2(0.15, 0.6)),
+            new Prop("mdb_offset", "Multiplicateur", ValType.Float, 2),
+            new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 400),
         ]),
         new Renderer("Burning ship", [
-            new Prop<vec2>("mdb_val", "Valeur de départ (Z<sub>0</sub>)", new vec2(0)),
-            new Prop<number>("mdb_offset", "Multiplicateur", 2),
-            new Prop<number>("mdb_iterations", "Nombre d'iterations", 400),
+            new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", ValType.Vec2, new vec2(0)),
+            new Prop("mdb_offset", "Multiplicateur", ValType.Float, 2),
+            new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 400),
         ]),
         new Renderer("Mandelbulb", [
-            new Prop<number>("blb_power", "Puissance", 5),
-            new Prop<number>("blb_z", "Position Z", 0),
-            new Prop<number>("blb_iterations", "Nombre d'iterations", 15),
+            new Prop("blb_power", "Puissance", ValType.Float, 5),
+            new Prop("blb_z", "Position Z", ValType.Float, 0),
+            new Prop("blb_iterations", "Nombre d'iterations", ValType.Int, 15),
         ]),
     ]
 }

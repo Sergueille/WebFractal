@@ -121,6 +121,7 @@ input[type=number] {
     right: 20px;
     width: 25rem;
     overflow-y: auto;
+    pointer-events: none;
 
     max-height: calc(100vh - 40px);
     border-radius: 10px;
@@ -132,6 +133,7 @@ input[type=number] {
     border-radius: 10px;
     overflow: hidden;
     height: 0px;
+    pointer-events: initial;
 
     transition: 200ms;
 }
