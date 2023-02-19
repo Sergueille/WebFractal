@@ -115,6 +115,12 @@ function CreateRenderers() {
             new Prop("mdb_offset", "Multiplicateur", ValType.Float, 2),
             new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 400),
         ]),
+        new Renderer("Mandelbrot modifié", [
+            new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", ValType.Vec2, new vec2(0)),
+            new Prop("mdb_offset", "Multiplicateur", ValType.Float, 2),
+            new Prop("mdb_delta", "δ", ValType.Float, -0.33),
+            new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 400),
+        ]),
         new Renderer("Mandelbulb", [
             new Prop("blb_power", "Puissance", ValType.Float, 5),
             new Prop("blb_z", "Position Z", ValType.Float, 0),

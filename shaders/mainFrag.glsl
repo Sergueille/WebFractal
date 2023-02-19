@@ -13,6 +13,9 @@ uniform highp vec2 mdb_val;
 uniform highp float mdb_iterations;
 uniform highp float mdb_offset;
 
+// Mandelbrot 2
+uniform highp float mdb_delta;
+
 // Mandelbulb
 uniform highp float blb_iterations;
 uniform highp float blb_power;
@@ -21,6 +24,7 @@ uniform highp float blb_z;
 highp float mandelbrot();
 highp float julia();
 highp float ship();
+highp float mdb_2();
 highp float mandelbulb();
 void main() {
     highp float val;
@@ -33,6 +37,9 @@ void main() {
     }
     else if (renderer == 2) {
         val = ship();
+    }
+    else if (renderer == 3) {
+        val = mdb_2();
     }
     else if (renderer == 3) {
         val = mandelbulb();
@@ -139,3 +146,28 @@ highp float ship() {
         }
     }
 }
+
+highp float mdb_2() {
+    highp vec2 Z = mdb_val;
+    int iterations = int(mdb_iterations);
+    const int maxIter = 10000;
+    for (int i = 0; i < maxIter; i++)
+    {
+        if (i > iterations) 
+            return (mdb_iterations - 1.0) / mdb_iterations;
+
+        Z = vec2(
+            (Z.x * Z.x) - (Z.y * Z.y),
+            mdb_offset * Z.x * Z.y
+        ) + vec2(
+            pos.x * pos.x * pos.x - 3.0 * pos.x * pos.y * pos.y,
+            3.0 * pos.x * pos.x * pos.y - pos.y * pos.y * pos.y
+        ) - mdb_delta;
+
+        if (dot(Z, Z) > 4.0)
+        {
+            return float(i) / mdb_iterations;
+        }
+    }
+}
+
