@@ -124,15 +124,23 @@
                 <div class="row">
                     <button class="circle" onclick="centerCamera()">
                         <span class="material-symbols-outlined">center_focus_strong</span>
+                        <span class="tooltip">Rencenter</span>
                     </button>
                     <button class="circle" onclick="togglePanel()">
                         <span class="material-symbols-outlined">visibility_off</span>
+                        <span class="tooltip">Cacher le panneau</span>
                     </button>
                     <button class="circle" onclick="OpenSubPanel('export-panel')">
                         <span class="material-symbols-outlined">upload</span>
+                        <span class="tooltip">Exporter</span>
+                    </button>
+                    <button class="circle" onclick="OpenSubPanel('info-panel')">
+                        <span class="material-symbols-outlined">help</span>
+                        <span class="tooltip">Info</span>
                     </button>
                     <button class="circle" onclick="ToggleFPS()">
                         <span class="material-symbols-outlined">avg_time</span>
+                        <span class="tooltip">Voir les performances</span>
                     </button>
                 </div>
             </div>
@@ -141,6 +149,7 @@
                     <button class="circle" onclick="OpenSubPanel('props-panel')">
                         <span class="material-symbols-outlined">arrow_back</span>
                     </button>
+                    <span class="title">Exporter</span>
                 </div>
                 <span class="sep"></span>
                 <div class="prop-row">
@@ -186,6 +195,59 @@
                     </button>
                     <span class="small-txt">Le rendu pourra prendre jusqu'à quelques secondes</span>
                 </div>
+            </div>
+            <div class="inner-panel" id="info-panel">
+                <div class="row">
+                    <button class="circle" onclick="OpenSubPanel('props-panel')">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </button>
+                    <span class="title">Info</span>
+                </div>
+                <span class="sep"></span>
+                <span class="title">Comment sont générées les fractales?</span>
+                <span>
+                    Pour chaque point du plan C(x, y), on considère une suite de complexes Z<sub>C</sub>.
+                    L'ordinateur va calculer le nombre d'éléments spécifiés, et déterminera si la suite tend vers l'infini. 
+                </span>
+                <span>
+                    Voici les formules utilisées:
+                </span>
+                <div class="row">
+                    <span>Mandelbrot:</span>
+                    <div class="system">
+                        <p>Z<sub>0</sub> = z<sub>0</sub></p>
+                        <p>Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C</p>
+                    </div>
+                </div>  
+                <div class="row">
+                    <span>Julia:</span>
+                    <div class="system">
+                        <p>Z<sub>0</sub> = C</p>
+                        <p>Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + D</p>
+                    </div>
+                </div>  
+                <div class="row">
+                    <span>Burning ship:</span>
+                    <div class="system">
+                        <p>Z<sub>0</sub> = z<sub>0</sub></p>
+                        <p>Z<sub>n+1</sub> = (|Re(Z<sub>n</sub>)| + i|Im(Z<sub>n</sub>)|)<sup>2</sup> + C</p>
+                    </div>
+                </div>  
+                <div class="row">
+                    <span>Mandelbrot modifié:</span>
+                    <div class="system">
+                        <p>Z<sub>0</sub> = z<sub>0</sub></p>
+                        <p>Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C<sup>3</sup> + δ</p>
+                    </div>
+                </div>  
+                <span class="title">Astuces</span>
+                <span>
+                    - En appuyant sur les boutons <div class="highlight">+</div> et <div class="highlight">-</div>, 
+                    vous pouvez appuyer sur <div class="highlight">Shift</div> pour aller plus rapidement, et sur <div class="highlight">Ctrl</div> pour aller plus lentement
+                </span>
+                <span>
+                    - Un nombre d'itérations très bas peut permettre d'obtenir des formes intéressantes.
+                </span>
             </div>
         </div>
         <div class="panel message hidden" id="slow-message">

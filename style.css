@@ -112,6 +112,28 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+button > .tooltip, .btn > .tooltip, select > .tooltip, input > .tooltip {
+    position: absolute;
+    
+    background-color: var(--bg-d);
+    padding: 5px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+
+    bottom: calc(100% + 10px);
+    left: 0;
+    height: 2rem;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: 200ms;
+}
+
+button:hover > .tooltip, .btn:hover > .tooltip, select:hover > .tooltip, input:hover > .tooltip 
+button:focus-visible > .tooltip, .btn:focus-visible > .tooltip, select:focus-visible > .tooltip, input:focus-visible > .tooltip {
+    opacity: 1;
+}
+
 .inner-panel, #params, .prop {
     display: flex;
     flex-direction: column;
@@ -154,6 +176,10 @@ input[type=number] {
 .panel.message {
     height: calc(3.9rem + 20px);
     line-height: 1.3rem;
+}
+
+.panel.message.hidden {
+    height: 0;
 }
 
 .panel.message > * > .row {
@@ -242,6 +268,42 @@ input[type=number] {
     font-size: 0.8rem;
     line-height: 0.8rem;
     color: var(--txt-d);
+}
+
+.title {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.system {
+    position: relative;
+    margin-left: 15px;
+}
+
+.system::before {
+    content: "{";
+
+    display: block;
+    position: absolute;
+    top: 0.43rem;
+    left: -15px;
+    height: 2rem;
+
+    font-size: 2rem;
+    font-weight: 100;
+    line-height: 1.5rem;
+    scale: 1 1.8;
+}
+
+.system > * {
+    margin: 0;
+}  
+
+.highlight {
+    display: inline;
+    background-color: var(--bg-l);
+    border-radius: 5px;
+    padding: 0 5px;
 }
 
 @media screen and (max-width: 550px) {

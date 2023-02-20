@@ -13,7 +13,7 @@ const scrollSmooth = 0.05;
 const cameraSmooth = 0.2;
 function initCamera() {
     canvas.addEventListener("mousedown", onMouseDown);
-    canvas.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
     canvas.addEventListener("wheel", onScroll);
     canvas.addEventListener("touchstart", onTouchStart);

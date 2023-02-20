@@ -132,7 +132,7 @@ function RenderLoop() {
         }
     }
     else {
-        if (time > 2 && deltaTime * 1000 > 100 && !discardedSlowMessage) { // Too slow
+        if (time > 5 && deltaTime * 1000 > 100 && !discardedSlowMessage) { // Too slow
             slowMessage.classList.remove("hidden")
             isShowingSlowMessage = true;
         }

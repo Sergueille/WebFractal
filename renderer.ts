@@ -106,7 +106,7 @@ function CreateRenderers() {
             new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 400),
         ]),
         new Renderer("Julia", [
-            new Prop("mdb_val", "Constante C", ValType.Vec2, new vec2(0.15, 0.6)),
+            new Prop("mdb_val", "Constante D", ValType.Vec2, new vec2(0.15, 0.6)),
             new Prop("mdb_offset", "Multiplicateur", ValType.Float, 2),
             new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 400),
         ]),
