@@ -113,7 +113,7 @@ function CreateRenderers() {
         new Renderer("Burning ship", [
             new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", ValType.Vec2, new vec2(0)),
             new Prop("mdb_offset", "Multiplicateur", ValType.Float, 2),
-            new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 400),
+            new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 60),
         ]),
         new Renderer("Mandelbrot modifié", [
             new Prop("mdb_val", "Valeur de départ (Z<sub>0</sub>)", ValType.Vec2, new vec2(0)),

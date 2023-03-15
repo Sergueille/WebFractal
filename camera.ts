@@ -38,6 +38,9 @@ function updateCamera() {
         
         // Update zoom with more smoothing
         cameraSize += (targetCameraSize - cameraSize) * deltaTime / cameraSmooth;
+
+        if (Math.abs(targetCameraSize - cameraSize) < 0.005 && cameraTargetPos.sub(cameraPos).len() < 0.005)
+            shouldSmoothCamera = false;
     }
     else {
         // Update zoom
