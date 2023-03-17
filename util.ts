@@ -67,5 +67,5 @@ function hexToRgb(hex: string) {
         parseInt(result[2], 16) / 255,
         parseInt(result[3], 16) / 255
     ];
-  }
+}
 

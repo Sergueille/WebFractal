@@ -20,6 +20,15 @@ class Renderer {
             prop.SetUniform(shader);
         }
     }
+
+    public GetString() {
+        let res = "";
+        for (let i = 0; i < this.props.length - 1; i++) {
+            res += this.props[i].GetString() + ",";
+        }
+
+        return res + this.props[this.props.length - 1].GetString();
+    }
 }
 
 enum ValType {
@@ -95,6 +104,16 @@ class Prop {
         else {
             throw "Unknown prop type!"
         }
+    }
+
+    public GetString() {
+        if (this.type == ValType.Float)
+            return `${this.uniformName}:${Math.round(this.value * 1e3) / 1e3}`
+        else if (this.type == ValType.Int)
+            return `${this.uniformName}:${this.value}`
+        else if (this.type == ValType.Vec2)
+            return `${this.uniformName}:${Math.round(this.value.x * 1e3) / 1e3}|${Math.round(this.value.y * 1e3) / 1e3}`
+        return -5
     }
 }
 

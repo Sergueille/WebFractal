@@ -46,9 +46,9 @@ function initUI() {
         renderSelect.appendChild(option);
     }
 
-    changeRenderer(0);
+    changeRenderer(currentRendererID ?? 0);
 
-    colorInputA.value = "#250850";
+    colorInputA.value = "#161741";
     colorInputB.value = "#ff0000";
     colorInputC.value = "#000000";
     colorTreshold.value = "0.95"

@@ -27,7 +27,10 @@ body {
 
     margin: 0;
     padding: 0;
-    background-color: var(--bg);
+    height: 100vh;
+    background-color: black;
+    background-image: url("loading_bg.png");
+    background-size: cover;
 }
 
 button, .btn, select, input {
@@ -201,7 +204,7 @@ button:focus-visible > .tooltip, .btn:focus-visible > .tooltip, select:focus-vis
 .hidden {
     opacity: 0;
     transform: translateY(-100px);
-    pointer-events: none;
+    pointer-events: none !important;
 }
 
 #show-panel {
@@ -308,6 +311,23 @@ button:focus-visible > .tooltip, .btn:focus-visible > .tooltip, select:focus-vis
     background-color: var(--bg-l);
     border-radius: 5px;
     padding: 0 5px;
+}
+
+#loading-div {
+    position: absolute; 
+    z-index: -1;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading-div > * {
+    text-align: center;
 }
 
 @media screen and (max-width: 550px) {

@@ -1,4 +1,5 @@
 "use strict";
+var _a, _b;
 // Global variables
 let quadPosBuffer; // The vertax array of the main quad
 let canvas = document.querySelector("#canvas");
@@ -26,8 +27,34 @@ CreateBufferAndTextures();
 initShaders();
 initCamera();
 CreateRenderers();
-initUI();
 addEventListener("resize", onResize);
+// Read url params
+let params = new URL(window.location.href).searchParams;
+let camData = (_a = params.get("cam")) === null || _a === void 0 ? void 0 : _a.split(",");
+if (camData) {
+    cameraPos.x = +camData[0];
+    cameraPos.y = +camData[1];
+    targetCameraSize = cameraSize = +camData[2];
+}
+let values = (_b = params.get("vals")) === null || _b === void 0 ? void 0 : _b.split(",");
+if (values) {
+    changeRenderer(+values[0]);
+    for (let prop of currentRenderer.props) {
+        for (let val of values) {
+            if (val.includes(prop.uniformName)) {
+                let strVal = val.split(":")[1];
+                if (prop.type == ValType.Vec2) {
+                    prop.value.x = strVal.split("|")[0];
+                    prop.value.y = strVal.split("|")[1];
+                }
+                else
+                    prop.value = +strVal;
+            }
+        }
+    }
+}
+// Create UI
+initUI();
 function Render() {
     // Bind array buffer
     GL.bindBuffer(GL.ARRAY_BUFFER, quadPosBuffer);
@@ -113,7 +140,11 @@ function RenderLoop() {
     frame++;
     renderLoopHandle = window.requestAnimationFrame(RenderLoop);
 }
+function EachSecond() {
+    window.history.replaceState(null, "", `?cam=${getCamraString()}&vals=${currentRendererID},${currentRenderer.GetString()}`);
+}
 RenderLoop();
+setInterval(EachSecond, 2000);
 function CreateQuad() {
     const positions = [
         1.0, 1.0,

@@ -126,3 +126,7 @@ function onScroll(ev: WheelEvent) {
     let deltaNorm = ev.deltaY > 0 ? 1 : -1;
     targetCameraSize += deltaNorm * scrollSensibility * cameraSize;
 }
+
+function getCamraString() {
+    return `${Math.round(cameraPos.x * 1e6) / 1e6},${Math.round(cameraPos.y * 1e6) / 1e6},${Math.round(cameraSize * 1e6) / 1e6}`
+}

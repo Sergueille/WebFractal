@@ -39,8 +39,8 @@ function initUI() {
         option.innerHTML = renderers[i].name;
         renderSelect.appendChild(option);
     }
-    changeRenderer(0);
-    colorInputA.value = "#250850";
+    changeRenderer(currentRendererID !== null && currentRendererID !== void 0 ? currentRendererID : 0);
+    colorInputA.value = "#161741";
     colorInputB.value = "#ff0000";
     colorInputC.value = "#000000";
     colorTreshold.value = "0.95";

@@ -31,9 +31,40 @@ CreateBufferAndTextures();
 initShaders();
 initCamera();
 CreateRenderers();
-initUI();
 
 addEventListener("resize", onResize);
+
+// Read url params
+let params = new URL(window.location.href).searchParams;
+
+let camData = params.get("cam")?.split(",");
+if (camData) {
+    cameraPos.x = +camData[0];
+    cameraPos.y = +camData[1];
+    targetCameraSize = cameraSize = +camData[2];
+}
+
+let values = params.get("vals")?.split(",");
+if (values) {
+    changeRenderer(+values[0]);
+
+    for (let prop of currentRenderer.props) {
+        for (let val of values) {
+            if (val.includes(prop.uniformName)) {
+                let strVal = val.split(":")[1];
+                if (prop.type == ValType.Vec2) {
+                    prop.value.x = strVal.split("|")[0];
+                    prop.value.y = strVal.split("|")[1];
+                }
+                else
+                    prop.value = +strVal;
+            }
+        }
+    }
+}
+
+// Create UI
+initUI();
 
 function Render() {
     // Bind array buffer
@@ -140,11 +171,17 @@ function RenderLoop() {
 
     lastTime = time;
     frame++;
-
+    
     renderLoopHandle = window.requestAnimationFrame(RenderLoop);
 }
 
+function EachSecond()
+{
+    window.history.replaceState(null, "", `?cam=${getCamraString()}&vals=${currentRendererID},${currentRenderer.GetString()}`);
+}
+
 RenderLoop();
+setInterval(EachSecond, 2000);
 
 function CreateQuad() {
     const positions = [
