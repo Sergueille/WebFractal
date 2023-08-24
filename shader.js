@@ -51,7 +51,7 @@ function getShader(shaderName) {
 }
 function createShaderFromFile(vFile, fFile, shaderName) {
     return __awaiter(this, void 0, void 0, function* () {
-        let vResponse = yield fetch("shaders/" + vFile);
+        let vResponse = yield fetch("shaders/" + vFile); // TODO : make sure the shaders are loaded before other ressources such as fonts and images, cannot find a priority property
         let vText = yield vResponse.text();
         let fResponse = yield fetch("shaders/" + fFile);
         let fText = yield fResponse.text();

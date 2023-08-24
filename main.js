@@ -21,6 +21,8 @@ let lastCamSize;
 let propsChangedSinceLastFrame;
 let renderDuration;
 let renderLoopHandle;
+let averageDeltaTime = 0;
+const fpsSlidingAverageFactor = 0.05;
 CreateContext();
 CreateQuad();
 CreateBufferAndTextures();
@@ -122,8 +124,9 @@ function RenderLoop() {
     lastCamPos = cameraPos;
     lastCamSize = cameraSize;
     updateCamera();
+    averageDeltaTime = deltaTime * fpsSlidingAverageFactor + averageDeltaTime * (1 - fpsSlidingAverageFactor);
     if (showFPS)
-        fps.innerHTML = `${Math.round(deltaTime * 1000)}ms (${Math.round(1 / deltaTime)} FPS)`;
+        fps.innerHTML = `${Math.round(averageDeltaTime * 1000)}ms (${Math.round(1 / averageDeltaTime)} FPS)`;
     if (isShowingSlowMessage) {
         if (discardedSlowMessage) { // Fast enough
             slowMessage.classList.add("hidden");

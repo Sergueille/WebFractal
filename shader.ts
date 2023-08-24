@@ -53,7 +53,7 @@ function getShader(shaderName: string) {
 }
 
 async function createShaderFromFile(vFile: string, fFile: string, shaderName: string) {
-    let vResponse = await fetch("shaders/" + vFile)
+    let vResponse = await fetch("shaders/" + vFile) // TODO : make sure the shaders are loaded before other ressources such as fonts and images, cannot find a priority property
     let vText = await vResponse.text();
 
     let fResponse = await fetch("shaders/" + fFile)
