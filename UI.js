@@ -32,6 +32,7 @@ var ExportSizeType;
     ExportSizeType[ExportSizeType["windowSize"] = 1] = "windowSize";
     ExportSizeType[ExportSizeType["customSize"] = 2] = "customSize";
 })(ExportSizeType || (ExportSizeType = {}));
+// TODO: set renderSelect on startup
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
         let option = document.createElement("option");
@@ -39,7 +40,8 @@ function initUI() {
         option.innerHTML = renderers[i].name;
         renderSelect.appendChild(option);
     }
-    changeRenderer(currentRendererID !== null && currentRendererID !== void 0 ? currentRendererID : 0);
+    changeRenderer(0);
+    renderSelect.value = "0";
     colorInputA.value = "#161741";
     colorInputB.value = "#ff0000";
     colorInputC.value = "#000000";

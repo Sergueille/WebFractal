@@ -5,6 +5,8 @@ let canvasSize: vec2; // Size of the canvas, in pixels
 let ratio: number; // Width of the canvas / height of the canvas
 let GL: WebGLRenderingContext;
 
+let exportInfoText = document.getElementById("export-info") as HTMLElement;
+
 let cumulTextureA: WebGLTexture;
 let cumulTextureB: WebGLTexture;
 let renderTexture: WebGLTexture;
@@ -40,17 +42,22 @@ addEventListener("resize", onResize);
 // Read url params
 let params = new URL(window.location.href).searchParams;
 
+// Create UI
+initUI();
+
 let camData = params.get("cam")?.split(",");
-if (camData) {
+if (camData && camData.length == 3) {
     cameraPos.x = +camData[0];
     cameraPos.y = +camData[1];
     targetCameraSize = cameraSize = +camData[2];
 }
 
 let values = params.get("vals")?.split(",");
-if (values) {
-    changeRenderer(+values[0]);
+if (values && values.length > 1) {
 
+    changeRenderer(+values[0]);
+    renderSelect.value = values[0];
+    
     for (let prop of currentRenderer.props) {
         for (let val of values) {
             if (val.includes(prop.uniformName)) {
@@ -66,8 +73,15 @@ if (values) {
     }
 }
 
-// Create UI
-initUI();
+let colors = params.get("colors")?.split(",");
+console.log(colors);
+if (colors && colors.length == 4) {
+    colorInputA.value = "#" + colors[0];
+    colorInputB.value = "#" + colors[1];
+    colorInputC.value = "#" + colors[2];
+    colorTreshold.value = colors[3];
+}
+
 
 function Render() {
     // Bind array buffer
@@ -182,7 +196,8 @@ function RenderLoop() {
 
 function EachSecond()
 {
-    window.history.replaceState(null, "", `?cam=${getCamraString()}&vals=${currentRendererID},${currentRenderer.GetString()}`);
+    window.history.replaceState(null, "", 
+        `?cam=${getCamraString()}&vals=${currentRendererID},${currentRenderer.GetString()}&colors=${colorInputA.value.slice(1)},${colorInputB.value.slice(1)},${colorInputC.value.slice(1)},${colorTreshold.value}`);
 }
 
 RenderLoop();
@@ -273,9 +288,17 @@ function onResize() {
 }
 
 function Export() {
+    return new Promise(() => ExportAsync());
+}
+
+async function ExportAsync() {
     let exportSize;
     const exportSizeType = +exportSizeTypeSelect.value;
     const exportCustomSize = new vec2(+exportSizeXInput.value, +exportSizeYInput.value);
+
+    exportInfoText.innerText = "Veillez patienter...";
+
+    await delay(200);
 
     if (exportSizeType === ExportSizeType.screenSize) {
         exportSize = new vec2(window.screen.width, window.screen.height);
@@ -298,12 +321,14 @@ function Export() {
 
     GL.viewport(0, 0, canvas.width, canvas.height);
     CreateBufferAndTextures();
-
+    
     // Re-draw scene many times to remove noise
     for (let i = 0; i < 100; i++) {
         Render();
         frame++;
     }
+
+    exportInfoText.innerText = "Terminé! Si l'exportation a échoué, essayez un nombre d'itération plus bas.";
 
     // Save image
     var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");

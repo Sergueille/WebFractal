@@ -38,6 +38,8 @@ enum ExportSizeType {
     customSize
 }
 
+// TODO: set renderSelect on startup
+
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
         let option = document.createElement("option");
@@ -46,12 +48,13 @@ function initUI() {
         renderSelect.appendChild(option);
     }
 
-    changeRenderer(currentRendererID ?? 0);
+    changeRenderer(0);
+    renderSelect.value = "0";
 
     colorInputA.value = "#161741";
     colorInputB.value = "#ff0000";
     colorInputC.value = "#000000";
-    colorTreshold.value = "0.95"
+    colorTreshold.value = "0.95";
 
     document.addEventListener("keyup", UpdateKeys);
     document.addEventListener("keydown", UpdateKeys);

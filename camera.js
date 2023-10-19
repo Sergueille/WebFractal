@@ -1,13 +1,15 @@
 "use strict";
 let isDragging; // Is the user moving the 2d view?
 let lastMousePos; // Last drag position
-let lastTouchDistance; // Lastdistance between touches (for zoom)
+let lastTouchDistance; // Last distance between touches (for zoom)
+let wasZoomingLastFrame; // Was zooming last frame
 let lastTouchCount;
 let cameraPos = new vec2(0); // position of the camera
 let cameraSize = 1; // sizo of the camera (its height)
 let targetCameraSize = 1; // the size that the camera shold have without smoothing
 let shouldSmoothCamera = false;
 let cameraTargetPos;
+let currentMousePos;
 const scrollSensibility = 0.1;
 const scrollSmooth = 0.05;
 const cameraSmooth = 0.2;
@@ -36,7 +38,15 @@ function updateCamera() {
     }
     else {
         // Update zoom
-        cameraSize += (targetCameraSize - cameraSize) * deltaTime / scrollSmooth;
+        let zoomAmount = (targetCameraSize - cameraSize) * deltaTime / scrollSmooth;
+        // Move camera towards pointer
+        if (Math.abs(zoomAmount) >= 0.00001) {
+            let screenPos = currentMousePos.divide(canvasSize.y);
+            screenPos.y = 1 - screenPos.y;
+            let zoomCenter = screenPos.sub(new vec2(canvasSize.x / canvasSize.y * 0.5, 0.5)).mult(cameraSize * 2);
+            cameraPos = cameraPos.add(zoomCenter.mult(1 - (cameraSize + zoomAmount) / cameraSize));
+        }
+        cameraSize += zoomAmount;
     }
 }
 function onMouseDown(ev) {
@@ -55,6 +65,7 @@ function onTouchStart(ev) {
     }
 }
 function onMouseMove(ev) {
+    currentMousePos = new vec2(ev.clientX, ev.clientY);
     if (isDragging) {
         let newPos = new vec2(ev.clientX, ev.clientY);
         let delta = newPos.sub(lastMousePos).divide(canvasSize.y).mult(cameraSize * 2);
@@ -82,10 +93,19 @@ function onTouchMove(ev) {
             let touch0Pos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
             let touch1Pos = new vec2(ev.touches[1].clientX, ev.touches[1].clientY);
             let dist = touch1Pos.sub(touch0Pos).len();
-            targetCameraSize *= lastTouchDistance / dist;
-            cameraSize = targetCameraSize;
-            lastTouchDistance = dist;
+            if (wasZoomingLastFrame) {
+                targetCameraSize *= lastTouchDistance / dist;
+                // cameraSize = targetCameraSize;
+            }
+            lastTouchDistance = dist; // BUG last dist is not set on the first time
+            wasZoomingLastFrame = true;
         }
+        else {
+            wasZoomingLastFrame = false;
+        }
+    }
+    else {
+        wasZoomingLastFrame = false;
     }
     lastMousePos = newPos;
     lastTouchCount = touchCount;

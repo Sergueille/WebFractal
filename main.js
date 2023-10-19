@@ -1,11 +1,21 @@
 "use strict";
-var _a, _b;
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var _a, _b, _c;
 // Global variables
 let quadPosBuffer; // The vertax array of the main quad
 let canvas = document.querySelector("#canvas");
 let canvasSize; // Size of the canvas, in pixels
 let ratio; // Width of the canvas / height of the canvas
 let GL;
+let exportInfoText = document.getElementById("export-info");
 let cumulTextureA;
 let cumulTextureB;
 let renderTexture;
@@ -32,15 +42,18 @@ CreateRenderers();
 addEventListener("resize", onResize);
 // Read url params
 let params = new URL(window.location.href).searchParams;
+// Create UI
+initUI();
 let camData = (_a = params.get("cam")) === null || _a === void 0 ? void 0 : _a.split(",");
-if (camData) {
+if (camData && camData.length == 3) {
     cameraPos.x = +camData[0];
     cameraPos.y = +camData[1];
     targetCameraSize = cameraSize = +camData[2];
 }
 let values = (_b = params.get("vals")) === null || _b === void 0 ? void 0 : _b.split(",");
-if (values) {
+if (values && values.length > 1) {
     changeRenderer(+values[0]);
+    renderSelect.value = values[0];
     for (let prop of currentRenderer.props) {
         for (let val of values) {
             if (val.includes(prop.uniformName)) {
@@ -55,8 +68,14 @@ if (values) {
         }
     }
 }
-// Create UI
-initUI();
+let colors = (_c = params.get("colors")) === null || _c === void 0 ? void 0 : _c.split(",");
+console.log(colors);
+if (colors && colors.length == 4) {
+    colorInputA.value = "#" + colors[0];
+    colorInputB.value = "#" + colors[1];
+    colorInputC.value = "#" + colors[2];
+    colorTreshold.value = colors[3];
+}
 function Render() {
     // Bind array buffer
     GL.bindBuffer(GL.ARRAY_BUFFER, quadPosBuffer);
@@ -144,7 +163,7 @@ function RenderLoop() {
     renderLoopHandle = window.requestAnimationFrame(RenderLoop);
 }
 function EachSecond() {
-    window.history.replaceState(null, "", `?cam=${getCamraString()}&vals=${currentRendererID},${currentRenderer.GetString()}`);
+    window.history.replaceState(null, "", `?cam=${getCamraString()}&vals=${currentRendererID},${currentRenderer.GetString()}&colors=${colorInputA.value.slice(1)},${colorInputB.value.slice(1)},${colorInputC.value.slice(1)},${colorTreshold.value}`);
 }
 RenderLoop();
 setInterval(EachSecond, 2000);
@@ -214,40 +233,48 @@ function onResize() {
     GL.viewport(0, 0, canvas.width, canvas.height);
 }
 function Export() {
-    let exportSize;
-    const exportSizeType = +exportSizeTypeSelect.value;
-    const exportCustomSize = new vec2(+exportSizeXInput.value, +exportSizeYInput.value);
-    if (exportSizeType === ExportSizeType.screenSize) {
-        exportSize = new vec2(window.screen.width, window.screen.height);
-    }
-    else if (exportSizeType === ExportSizeType.windowSize) {
-        exportSize = new vec2(window.innerWidth, window.innerHeight);
-    }
-    else {
-        exportSize = exportCustomSize.abs();
-    }
-    // Stop rendering
-    window.cancelAnimationFrame(renderLoopHandle);
-    // Apply custom size
-    canvasSize = new vec2(exportSize.x, exportSize.y);
-    canvas.setAttribute("width", exportSize.x.toString());
-    canvas.setAttribute("height", exportSize.y.toString());
-    ratio = exportSize.x / exportSize.y;
-    GL.viewport(0, 0, canvas.width, canvas.height);
-    CreateBufferAndTextures();
-    // Re-draw scene many times to remove noise
-    for (let i = 0; i < 100; i++) {
-        Render();
-        frame++;
-    }
-    // Save image
-    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-    var a = document.createElement('a');
-    a.href = image;
-    a.download = "fractal.png";
-    a.click();
-    // Reset canvas size
-    onResize();
-    // Resume rendering
-    RenderLoop();
+    return new Promise(() => ExportAsync());
+}
+function ExportAsync() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let exportSize;
+        const exportSizeType = +exportSizeTypeSelect.value;
+        const exportCustomSize = new vec2(+exportSizeXInput.value, +exportSizeYInput.value);
+        exportInfoText.innerText = "Veillez patienter...";
+        yield delay(200);
+        if (exportSizeType === ExportSizeType.screenSize) {
+            exportSize = new vec2(window.screen.width, window.screen.height);
+        }
+        else if (exportSizeType === ExportSizeType.windowSize) {
+            exportSize = new vec2(window.innerWidth, window.innerHeight);
+        }
+        else {
+            exportSize = exportCustomSize.abs();
+        }
+        // Stop rendering
+        window.cancelAnimationFrame(renderLoopHandle);
+        // Apply custom size
+        canvasSize = new vec2(exportSize.x, exportSize.y);
+        canvas.setAttribute("width", exportSize.x.toString());
+        canvas.setAttribute("height", exportSize.y.toString());
+        ratio = exportSize.x / exportSize.y;
+        GL.viewport(0, 0, canvas.width, canvas.height);
+        CreateBufferAndTextures();
+        // Re-draw scene many times to remove noise
+        for (let i = 0; i < 100; i++) {
+            Render();
+            frame++;
+        }
+        exportInfoText.innerText = "Terminé! Si l'exportation a échoué, essayez un nombre d'itération plus bas.";
+        // Save image
+        var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+        var a = document.createElement('a');
+        a.href = image;
+        a.download = "fractal.png";
+        a.click();
+        // Reset canvas size
+        onResize();
+        // Resume rendering
+        RenderLoop();
+    });
 }

@@ -207,6 +207,10 @@ button:focus-visible > .tooltip, .btn:focus-visible > .tooltip, select:focus-vis
     pointer-events: none !important;
 }
 
+.hidden > * {
+    pointer-events: none !important;
+}
+
 #show-panel {
     transition: 200ms;
     background-color: var(--bg);
