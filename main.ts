@@ -1,5 +1,5 @@
 // Global variables
-let quadPosBuffer: WebGLBuffer; // The vertax array of the main quad
+let quadPosBuffer: WebGLBuffer; // The vertex array of the main quad
 let canvas: HTMLCanvasElement = document.querySelector("#canvas") as HTMLCanvasElement;
 let canvasSize: vec2; // Size of the canvas, in pixels
 let ratio: number; // Width of the canvas / height of the canvas
@@ -11,8 +11,8 @@ let cumulTextureA: WebGLTexture;
 let cumulTextureB: WebGLTexture;
 let renderTexture: WebGLTexture;
 let framebuffer: WebGLFramebuffer;
-let cumulbufferA: WebGLFramebuffer;
-let cumulbufferB: WebGLFramebuffer;
+let cumulBufferA: WebGLFramebuffer;
+let cumulBufferB: WebGLFramebuffer;
 
 let time: number = 0;
 let deltaTime: number = 0;
@@ -41,53 +41,18 @@ addEventListener("resize", onResize);
 
 // Read url params
 let params = new URL(window.location.href).searchParams;
+LoadPropsFromURL(params.toString());
 
 // Create UI
 initUI();
-
-let camData = params.get("cam")?.split(",");
-if (camData && camData.length == 3) {
-    cameraPos.x = +camData[0];
-    cameraPos.y = +camData[1];
-    targetCameraSize = cameraSize = +camData[2];
-}
-
-let values = params.get("vals")?.split(",");
-if (values && values.length > 1) {
-
-    changeRenderer(+values[0]);
-    renderSelect.value = values[0];
-    
-    for (let prop of currentRenderer.props) {
-        for (let val of values) {
-            if (val.includes(prop.uniformName)) {
-                let strVal = val.split(":")[1];
-                if (prop.type == ValType.Vec2) {
-                    prop.value.x = strVal.split("|")[0];
-                    prop.value.y = strVal.split("|")[1];
-                }
-                else
-                    prop.value = +strVal;
-            }
-        }
-    }
-}
-
-let colors = params.get("colors")?.split(",");
-console.log(colors);
-if (colors && colors.length == 4) {
-    colorInputA.value = "#" + colors[0];
-    colorInputB.value = "#" + colors[1];
-    colorInputC.value = "#" + colors[2];
-    colorTreshold.value = colors[3];
-}
-
 
 function Render() {
     // Bind array buffer
     GL.bindBuffer(GL.ARRAY_BUFFER, quadPosBuffer);
 
-    let cameraMoved = lastCamPos != cameraPos || Math.abs(lastCamSize - cameraSize) > cameraSize * 0.0005;
+    cameraPos = new vec2(Math.round(cameraPos.x * canvasSize.x / cameraSize) / canvasSize.x * cameraSize,
+                         Math.round(cameraPos.y * canvasSize.y / cameraSize) / canvasSize.y * cameraSize);
+    if (!lastCamPos) lastCamPos = cameraPos;
 
     // Draw main quad
     if (shaderLoaded("main") && shaderLoaded("blur") && shaderLoaded("blit")) {
@@ -117,19 +82,29 @@ function Render() {
 
         /////// CUMUL PASS
         useShader(blurShader);
+        let shift = cameraPos.sub(lastCamPos).dividev(new vec2(2 * cameraSize * canvasSize.x / canvasSize.y, 2 * cameraSize));
+
+        if (!propsChangedSinceLastFrame) {
+            GL.uniform2f(getShaderUniform(blurShader, "shift"), shift.x, shift.y);
+            GL.uniform1f(getShaderUniform(blurShader, "sizeShift"), (lastCamSize - cameraSize) / lastCamSize);
+        }
+        else {
+            GL.uniform2f(getShaderUniform(blurShader, "shift"), 0, 0);
+            GL.uniform1f(getShaderUniform(blurShader, "sizeShift"), 0);
+        }
 
         if (frame % 2 == 0) {
-            GL.bindFramebuffer(GL.FRAMEBUFFER, cumulbufferA);
+            GL.bindFramebuffer(GL.FRAMEBUFFER, cumulBufferA);
 
-            if (cameraMoved || propsChangedSinceLastFrame)
+            if (propsChangedSinceLastFrame)
                 setTexture(blurShader, "cumul", renderTexture, 0);
             else
                 setTexture(blurShader, "cumul", cumulTextureB, 0);
         }
         else {
-            GL.bindFramebuffer(GL.FRAMEBUFFER, cumulbufferB);
+            GL.bindFramebuffer(GL.FRAMEBUFFER, cumulBufferB);
 
-            if (cameraMoved || propsChangedSinceLastFrame)
+            if (propsChangedSinceLastFrame)
                 setTexture(blurShader, "cumul", renderTexture, 0);
             else
                 setTexture(blurShader, "cumul", cumulTextureA, 0);
@@ -162,7 +137,7 @@ function Render() {
 function RenderLoop() {
     time = performance.now() / 1000;
     deltaTime = time - lastTime;
-    if (deltaTime > 0.5) deltaTime = 0.5; // Prevent FPS drop breaking program
+    if (deltaTime > 0.2) deltaTime = 0.2; // Prevent FPS drop breaking program
 
     Render();
 
@@ -197,7 +172,7 @@ function RenderLoop() {
 function EachSecond()
 {
     window.history.replaceState(null, "", 
-        `?cam=${getCamraString()}&vals=${currentRendererID},${currentRenderer.GetString()}&colors=${colorInputA.value.slice(1)},${colorInputB.value.slice(1)},${colorInputC.value.slice(1)},${colorTreshold.value}`);
+        `?cam=${getCameraString()}&vals=${currentRendererID},${currentRenderer.GetString()}&colors=${colorInputA.value.slice(1)},${colorInputB.value.slice(1)},${colorInputC.value.slice(1)},${colorThreshold.value}`);
 }
 
 RenderLoop();
@@ -221,12 +196,12 @@ function CreateContext() {
     canvas.setAttribute("width", canvasSize.x.toString());
     canvas.setAttribute("height", canvasSize.y.toString());
     ratio = window.innerWidth / window.innerHeight;
-    let glnull = canvas.getContext("webgl2", {antialias: false});
+    let glNull = canvas.getContext("webgl2", {antialias: false});
 
-    if (!glnull)
+    if (!glNull)
         alert("The website can't init WebGL. Your browser or machine doesn't support it.");
 
-    GL = glnull!!;
+    GL = glNull!!;
 
     GL.disable(GL.DEPTH_TEST);
 }
@@ -237,13 +212,13 @@ function SetVertexArray(shader: WebGLShader) {
         2, // nb components (here vec2)
         GL.FLOAT, // data type
         false, // normalize
-        0, // strinde (how many to skip to reach next data) here 0 is default
+        0, // stride (how many to skip to reach next data) here 0 is default
         0, // offset (where to start?)
     );
     GL.enableVertexAttribArray(getShaderAttribute(shader, "vPos"));
 }
 
-// Creates a new framebuffer (needed wher window is resized)
+// Creates a new framebuffer (needed when window is resized)
 function CreateBufferAndTextures() {
     // create textures
     renderTexture = CreateRenderTexture(canvasSize.x, canvasSize.y);
@@ -254,12 +229,12 @@ function CreateBufferAndTextures() {
     GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
     GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, renderTexture, 0);
 
-    cumulbufferA = GL.createFramebuffer()!!;
-    GL.bindFramebuffer(GL.FRAMEBUFFER, cumulbufferA);
+    cumulBufferA = GL.createFramebuffer()!!;
+    GL.bindFramebuffer(GL.FRAMEBUFFER, cumulBufferA);
     GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, cumulTextureA, 0);   
 
-    cumulbufferB = GL.createFramebuffer()!!;
-    GL.bindFramebuffer(GL.FRAMEBUFFER, cumulbufferB);
+    cumulBufferB = GL.createFramebuffer()!!;
+    GL.bindFramebuffer(GL.FRAMEBUFFER, cumulBufferB);
     GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, cumulTextureB, 0);  
 
     propsChangedSinceLastFrame = true; // Make sure to render the fractal without antialiasing
@@ -341,4 +316,51 @@ async function ExportAsync() {
     onResize();
     // Resume rendering
     RenderLoop();
+}
+
+function LoadPropsFromURL(text: string) {
+    let params = new URLSearchParams(text);
+
+    let camData = params.get("cam")?.split(",");
+    if (camData && camData.length == 3) {
+        cameraPos.x = +camData[0];
+        cameraPos.y = +camData[1];
+        targetCameraSize = cameraSize = +camData[2];
+    }
+
+    let values = params.get("vals")?.split(",");
+    if (values && values.length > 1) {
+
+        let targetRendererID = +values[0];
+        let targetRenderer = renderers[targetRendererID];
+
+        for (let prop of targetRenderer.props) {
+            for (let val of values) {
+                if (val.includes(prop.uniformName)) {
+                    let strVal = val.split(":")[1];
+                    if (prop.type == ValType.Vec2) {
+                        prop.value.x = strVal.split("|")[0];
+                        prop.value.y = strVal.split("|")[1];
+                    }
+                    else
+                        prop.value = +strVal;
+                }
+            }
+        }
+
+        changeRenderer(targetRendererID);
+        renderSelect.value = values[0];
+    }
+    else {
+        changeRenderer(0);
+        renderSelect.value = "0";
+    }
+
+    let colors = params.get("colors")?.split(",");
+    if (colors && colors.length == 4) {
+        colorInputA.value = "#" + colors[0];
+        colorInputB.value = "#" + colors[1];
+        colorInputC.value = "#" + colors[2];
+        colorThreshold.value = colors[3];
+    }
 }

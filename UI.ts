@@ -6,7 +6,7 @@ const renderSelect = document.getElementById("render-select")!! as HTMLSelectEle
 const colorInputA = document.getElementById("color-a")!! as HTMLInputElement;
 const colorInputB = document.getElementById("color-b")!! as HTMLInputElement;
 const colorInputC = document.getElementById("color-c")!! as HTMLInputElement;
-const colorTreshold = document.getElementById("color-treshold")!! as HTMLInputElement;
+const colorThreshold = document.getElementById("color-treshold")!! as HTMLInputElement;
 const exportSizeTypeSelect = document.getElementById("export-size-type") as HTMLSelectElement;
 const exportSizeXInput = document.getElementById("export-size-x") as HTMLInputElement;
 const exportSizeYInput = document.getElementById("export-size-y") as HTMLInputElement;
@@ -38,8 +38,6 @@ enum ExportSizeType {
     customSize
 }
 
-// TODO: set renderSelect on startup
-
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
         let option = document.createElement("option");
@@ -48,13 +46,7 @@ function initUI() {
         renderSelect.appendChild(option);
     }
 
-    changeRenderer(0);
-    renderSelect.value = "0";
-
-    colorInputA.value = "#161741";
-    colorInputB.value = "#ff0000";
-    colorInputC.value = "#000000";
-    colorTreshold.value = "0.95";
+    renderSelect.value = currentRendererID.toString();
 
     document.addEventListener("keyup", UpdateKeys);
     document.addEventListener("keydown", UpdateKeys);
@@ -100,7 +92,7 @@ function UpdateUI() {
         GL.uniform3fv(getShaderUniform(shader, "colorA"), hexToRgb(colorInputA.value));
         GL.uniform3fv(getShaderUniform(shader, "colorB"), hexToRgb(colorInputB.value));
         GL.uniform3fv(getShaderUniform(shader, "colorC"), hexToRgb(colorInputC.value));
-        GL.uniform1f(getShaderUniform(shader, "treshold"), +colorTreshold.value);
+        GL.uniform1f(getShaderUniform(shader, "treshold"), +colorThreshold.value);
         
         document.body.style.setProperty('--prim', colorInputB.value);
     }

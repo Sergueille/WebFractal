@@ -7,7 +7,7 @@ const renderSelect = document.getElementById("render-select");
 const colorInputA = document.getElementById("color-a");
 const colorInputB = document.getElementById("color-b");
 const colorInputC = document.getElementById("color-c");
-const colorTreshold = document.getElementById("color-treshold");
+const colorThreshold = document.getElementById("color-treshold");
 const exportSizeTypeSelect = document.getElementById("export-size-type");
 const exportSizeXInput = document.getElementById("export-size-x");
 const exportSizeYInput = document.getElementById("export-size-y");
@@ -32,7 +32,6 @@ var ExportSizeType;
     ExportSizeType[ExportSizeType["windowSize"] = 1] = "windowSize";
     ExportSizeType[ExportSizeType["customSize"] = 2] = "customSize";
 })(ExportSizeType || (ExportSizeType = {}));
-// TODO: set renderSelect on startup
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
         let option = document.createElement("option");
@@ -40,12 +39,7 @@ function initUI() {
         option.innerHTML = renderers[i].name;
         renderSelect.appendChild(option);
     }
-    changeRenderer(0);
-    renderSelect.value = "0";
-    colorInputA.value = "#161741";
-    colorInputB.value = "#ff0000";
-    colorInputC.value = "#000000";
-    colorTreshold.value = "0.95";
+    renderSelect.value = currentRendererID.toString();
     document.addEventListener("keyup", UpdateKeys);
     document.addEventListener("keydown", UpdateKeys);
     for (let child of panel.children) {
@@ -82,7 +76,7 @@ function UpdateUI() {
         GL.uniform3fv(getShaderUniform(shader, "colorA"), hexToRgb(colorInputA.value));
         GL.uniform3fv(getShaderUniform(shader, "colorB"), hexToRgb(colorInputB.value));
         GL.uniform3fv(getShaderUniform(shader, "colorC"), hexToRgb(colorInputC.value));
-        GL.uniform1f(getShaderUniform(shader, "treshold"), +colorTreshold.value);
+        GL.uniform1f(getShaderUniform(shader, "treshold"), +colorThreshold.value);
         document.body.style.setProperty('--prim', colorInputB.value);
     }
     panel.style.setProperty("height", (currentSubPanel === null || currentSubPanel === void 0 ? void 0 : currentSubPanel.clientHeight) + "px");

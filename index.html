@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 
     <script src="util.js" defer="defer"></script>
+    <script src="spots.js" defer="defer"></script>
     <script src="UI.js" defer="defer"></script>
     <script src="renderer.js" defer="defer"></script>
     <script src="camera.js" defer="defer"></script>
@@ -137,6 +138,10 @@
                         <span class="material-symbols-outlined">visibility_off</span>
                         <span class="tooltip">Cacher le panneau</span>
                     </button>
+                    <button class="circle" onclick="RandomSpot()">
+                        <span class="material-symbols-outlined">casino</span>
+                        <span class="tooltip">Voir un endroit au hasard</span>
+                    </button>
                     <button class="circle" onclick="OpenSubPanel('export-panel')">
                         <span class="material-symbols-outlined">upload</span>
                         <span class="tooltip">Exporter</span>
@@ -254,6 +259,14 @@
                 </span>
                 <span>
                     - Un nombre d'itérations très bas peut permettre d'obtenir des formes intéressantes.
+                </span>
+                <span>
+                    - Toutes les valeurs que vous avez changées sont mises dans l'URL. Vous pouvez donc copier le lien pour retrouver exactement
+                    ce que vous êtes en train de voir plus tard. 
+                </span>
+                <span class="title">Crédits</span>
+                <span>
+                    - Ce site utilise les icônes de <a href="https://fonts.google.com/icons">Material Symbols</a> (Apache License 2.0)
                 </span>
             </div>
         </div>

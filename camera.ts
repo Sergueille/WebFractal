@@ -4,6 +4,11 @@ let lastTouchDistance: number; // Last distance between touches (for zoom)
 let wasZoomingLastFrame: boolean; // Was zooming last frame
 let lastTouchCount: number;
 
+let dragVelocity = new vec2(0, 0);
+const dragVelocityLoss = 2;
+let dragAverageSpeed = new vec2(0, 0);
+const dragAverageSpeedWeight = 0.7;
+
 let cameraPos: vec2 = new vec2(0); // position of the camera
 let cameraSize: number = 1; // sizo of the camera (its height)
 let targetCameraSize: number = 1; // the size that the camera shold have without smoothing
@@ -33,7 +38,6 @@ function centerCamera() {
 }
 
 function updateCamera() {
-
     // Update position
     if (shouldSmoothCamera) {
         cameraPos = cameraPos.add(cameraTargetPos.sub(cameraPos).mult(deltaTime).divide(cameraSmooth));
@@ -47,16 +51,17 @@ function updateCamera() {
     else {
         // Update zoom
         let zoomAmount = (targetCameraSize - cameraSize) * deltaTime / scrollSmooth;
+        addZoom(zoomAmount);
 
-        // Move camera towards pointer
-        if (Math.abs(zoomAmount) >= 0.00001) {
-            let screenPos = currentMousePos.divide(canvasSize.y);
-            screenPos.y = 1 - screenPos.y;
-            let zoomCenter = screenPos.sub(new vec2(canvasSize.x / canvasSize.y * 0.5, 0.5)).mult(cameraSize * 2);
-            cameraPos = cameraPos.add(zoomCenter.mult(1 - (cameraSize + zoomAmount) / cameraSize));
+        if (!isDragging) {
+            cameraPos = cameraPos.add(dragVelocity);
+            dragVelocity = dragVelocity.mult(1 - dragVelocityLoss * deltaTime);
         }
-        
-        cameraSize += zoomAmount;
+    }
+
+    if (isDragging) { // ragging but mouse is still
+        dragAverageSpeed = dragAverageSpeed.mult(dragAverageSpeedWeight);
+        dragVelocity = dragAverageSpeed;
     }
 }
 
@@ -64,18 +69,14 @@ function onMouseDown(ev: MouseEvent) {
     isDragging = true;
     lastMousePos = new vec2(ev.clientX, ev.clientY);
     shouldSmoothCamera = false;
+    dragVelocity = new vec2(0, 0);
+    dragAverageSpeed = new vec2(0, 0);
 }
 
 function onTouchStart(ev: TouchEvent) {
     isDragging = true;
     lastMousePos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
     shouldSmoothCamera = false;
-
-    if (ev.touches.length === 2) {
-        let touch0Pos = new vec2(ev.touches[0].clientX, ev.touches[0].clientY);
-        let touch1Pos = new vec2(ev.touches[1].clientX, ev.touches[1].clientY);
-        lastTouchDistance = touch1Pos.sub(touch0Pos).len();
-    }
 }
 
 function onMouseMove(ev: MouseEvent) {
@@ -86,6 +87,10 @@ function onMouseMove(ev: MouseEvent) {
         let delta = newPos.sub(lastMousePos).divide(canvasSize.y).mult(cameraSize * 2);
         delta.x *= -1;
         cameraPos = cameraPos.add(delta);
+
+        // TEST: move this on touches
+        dragAverageSpeed = dragAverageSpeed.mult(dragAverageSpeedWeight).add(delta.mult(1 - dragAverageSpeedWeight));
+        dragVelocity = dragAverageSpeed;
 
         lastMousePos = newPos;
     }
@@ -117,11 +122,10 @@ function onTouchMove(ev: TouchEvent) {
             let dist = touch1Pos.sub(touch0Pos).len();
 
             if (wasZoomingLastFrame) {
-                targetCameraSize *= lastTouchDistance / dist;
-                // cameraSize = targetCameraSize;
+                addZoom(cameraSize * lastTouchDistance / dist - cameraSize);
             }
 
-            lastTouchDistance = dist; // BUG last dist is not set on the first time
+            lastTouchDistance = dist;
             wasZoomingLastFrame = true;
         }
         else {
@@ -149,6 +153,18 @@ function onScroll(ev: WheelEvent) {
     targetCameraSize += deltaNorm * scrollSensibility * cameraSize;
 }
 
-function getCamraString() {
+function getCameraString() {
     return `${Math.round(cameraPos.x * 1e6) / 1e6},${Math.round(cameraPos.y * 1e6) / 1e6},${Math.round(cameraSize * 1e6) / 1e6}`
+}
+
+function addZoom(zoomAmount: number) {
+    // Move camera towards pointer
+    if (Math.abs(zoomAmount) >= 0.00001) {
+        let screenPos = currentMousePos.divide(canvasSize.y);
+        screenPos.y = 1 - screenPos.y;
+        let zoomCenter = screenPos.sub(new vec2(canvasSize.x / canvasSize.y * 0.5, 0.5)).mult(cameraSize * 2);
+        cameraPos = cameraPos.add(zoomCenter.mult(1 - (cameraSize + zoomAmount) / cameraSize));
+    }
+    
+    cameraSize += zoomAmount;
 }
