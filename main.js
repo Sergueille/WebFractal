@@ -297,4 +297,10 @@ function LoadPropsFromURL(text) {
         colorInputC.value = "#" + colors[2];
         colorThreshold.value = colors[3];
     }
+    else {
+        colorInputA.value = "#172540";
+        colorInputB.value = "#1de817";
+        colorInputC.value = "#051401";
+        colorThreshold.value = "0.95";
+    }
 }
