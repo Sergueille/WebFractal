@@ -26,7 +26,13 @@ const spots = [
     "cam=-0.033442,0.575151,0.000407&vals=0,mdb_val:0|0.245,mdb_offset:3.041,mdb_iterations:400&colors=241104,145b70,58ed6f,0.95",
     "cam=-0.493265,-0.160558,0.001331&vals=2,mdb_val:-0.764|-0.229,mdb_offset:2,mdb_iterations:150&colors=15510d,9cefc6,e4ee9d,0.95",
     "cam=-1.748459,0.003046,0.000531&vals=2,mdb_val:0|-0.255,mdb_offset:2.095,mdb_iterations:150&colors=15510d,efd79c,fb9b9d,0.95",
-    "cam=-0.996321,0.105999,0.000127&vals=0,mdb_val:0.00015|0.281,mdb_offset:3.041,mdb_iterations:400&colors=161348,7dd757,96d399,0.9"
+    "cam=-0.996321,0.105999,0.000127&vals=0,mdb_val:0.00015|0.281,mdb_offset:3.041,mdb_iterations:400&colors=161348,7dd757,96d399,0.9",
+    "cam=-0.877023,0.182955,1&vals=5,mdb_iterations:4,nwt_a:2.604,nwt_b:0.0&colors=172540,e66100,a51d2d,0.95",
+    "cam=0.604469,-0.05537,1&vals=5,mdb_iterations:50,nwt_a:2.604,nwt_b:0.0&colors=172540,172540,a51d2d,0.95",
+    "cam=0.276639,0.814435,0.299616&vals=5,mdb_iterations:103,nwt_a:2.049,nwt_b:0.0&colors=99c1f1,e66100,241f31,0.95",
+    "cam=0.275197,0.225396,1.371639&vals=5,mdb_iterations:60,nwt_a:0.975,nwt_b:1.038&colors=ffffff,f8e45c,000000,0.95",
+    "cam=0.04014,0.040584,19.878422&vals=5,mdb_iterations:70,nwt_a:0.243,nwt_b:-0.626&colors=9141ac,ff7800,241f31,0.95",
+    "cam=0.197514,-2.012774,0.122813&vals=5,mdb_iterations:63,nwt_a:1.88,nwt_b:0.664&colors=172540,74ff78,4b6f5e,0.95",
 ];
 
 function RandomSpot() {

@@ -5,7 +5,7 @@ let lastTouchDistance; // Last distance between touches (for zoom)
 let wasZoomingLastFrame; // Was zooming last frame
 let lastTouchCount;
 let dragVelocity = new vec2(0, 0);
-const dragVelocityLoss = 2;
+const dragVelocityLoss = 4;
 let dragAverageSpeed = new vec2(0, 0);
 const dragAverageSpeedWeight = 0.7;
 let cameraPos = new vec2(0); // position of the camera

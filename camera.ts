@@ -5,7 +5,7 @@ let wasZoomingLastFrame: boolean; // Was zooming last frame
 let lastTouchCount: number;
 
 let dragVelocity = new vec2(0, 0);
-const dragVelocityLoss = 2;
+const dragVelocityLoss = 4;
 let dragAverageSpeed = new vec2(0, 0);
 const dragAverageSpeedWeight = 0.7;
 

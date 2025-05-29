@@ -80,7 +80,6 @@ function Render() {
         /////// CUMUL PASS
         useShader(blurShader);
         let shift = renderCamPos.sub(renderCamLastPos).dividev(new vec2(2 * cameraSize * canvasSize.x / canvasSize.y, 2 * cameraSize));
-        console.log(shift);
         if (!propsChangedSinceLastFrame) {
             GL.uniform2f(getShaderUniform(blurShader, "shift"), shift.x, shift.y);
             GL.uniform1f(getShaderUniform(blurShader, "sizeShift"), (lastCamSize - cameraSize) / lastCamSize);

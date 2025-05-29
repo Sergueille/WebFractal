@@ -125,5 +125,10 @@ function CreateRenderers() {
             new Prop("blb_z", "Position Z", ValType.Float, 0),
             new Prop("blb_iterations", "Nombre d'iterations", ValType.Int, 15),
         ]),
+        new Renderer("Newton", [
+            new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 50),
+            new Prop("nwt_a", "a", ValType.Float, 1),
+            new Prop("nwt_b", "b", ValType.Float, 0),
+        ]),
     ];
 }

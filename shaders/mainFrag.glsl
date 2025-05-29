@@ -21,11 +21,16 @@ uniform highp float blb_iterations;
 uniform highp float blb_power;
 uniform highp float blb_z;
 
+// Newton
+uniform highp float nwt_a;
+uniform highp float nwt_b;
+
 highp float mandelbrot();
 highp float julia();
 highp float ship();
 highp float mdb_2();
 highp float mandelbulb();
+highp float newton();
 void main() {
     highp float val;
 
@@ -41,8 +46,11 @@ void main() {
     else if (renderer == 3) {
         val = mdb_2();
     }
-    else if (renderer == 3) {
+    else if (renderer == 4) {
         val = mandelbulb();
+    }
+    else if (renderer == 5) {
+        val = newton();
     }
 
     val = clamp(val, 0.0, 1.0);
@@ -71,6 +79,37 @@ highp float mandelbrot() {
         }
     }
 }
+
+
+lowp vec2 mult(lowp vec2 a, lowp vec2 b) {
+    return vec2(
+        a.x*b.x - a.y*b.y,
+        a.x*b.y + a.y*b.x
+    );
+}
+lowp vec2 divide(lowp vec2 a, lowp vec2 b) {
+    lowp float div = 1.0 / dot(b, b);
+    return vec2(
+        (a.x*b.x + a.y*b.y) * div,
+        (-a.x*b.y + a.y*b.x) * div
+    );
+}
+
+highp float newton() {
+    highp vec2 Z = pos;
+    int iterations = int(mdb_iterations);
+    const int maxIter = 10000;
+
+    for (int i = 0; i < maxIter; i++)
+    {
+        if (i > iterations) break;
+
+        Z -= mult(vec2(nwt_a, nwt_b), divide(mult(mult(Z, Z), Z) - vec2(1, 0), 3.0 * mult(Z, Z)));
+    }
+
+    return ((Z.y / Z.x) + 1.0) / 2.0;
+}
+
 
 highp float julia() {
     highp vec2 Z = pos;
