@@ -132,9 +132,9 @@
                 <div class="row">
                     <button class="circle" onclick="centerCamera()">
                         <span class="material-symbols-outlined">center_focus_strong</span>
-                        <span class="tooltip">Recenter</span>
+                        <span class="tooltip">Recentrer</span>
                     </button>
-                    <button class="circle" onclick="togglePanel()">
+                    <button id="hide-panel_btn" class="circle" onclick="togglePanel()">
                         <span class="material-symbols-outlined">visibility_off</span>
                         <span class="tooltip">Cacher le panneau</span>
                     </button>
@@ -163,6 +163,9 @@
                     </button>
                     <span class="title">Exporter</span>
                 </div>
+                <span>
+                    Exportez ce que vous voyez actuellement à l'écran vers un fichier png
+                </span>
                 <span class="sep"></span>
                 <div class="prop-row">
                     <span class="prop-name">Taille</span>
@@ -218,7 +221,7 @@
                 <span class="sep"></span>
                 <span class="title">Comment sont générées les fractales?</span>
                 <span>
-                    Pour chaque point du plan C(x, y), on considère une suite de complexes Z<sub>C</sub>.
+                    Pour chaque point du plan complexe C, on considère une suite de complexes Z<sub>C</sub>.
                     L'ordinateur va calculer le nombre d'éléments spécifiés, et déterminera si la suite tend vers l'infini. 
                 </span>
                 <span>
@@ -251,7 +254,26 @@
                         <p>Z<sub>0</sub> = z<sub>0</sub></p>
                         <p>Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C<sup>3</sup> + δ</p>
                     </div>
-                </div>  
+                </div>
+
+                <span>
+                    Pour les fractales de newton, on considère un polynome
+                    P=c<sub>0</sub>+c<sub>1</sub>X+c<sub>2</sub>X<sup>2</sup>+c<sub>3</sub>X<sup>3</sup> 
+                    Au lieu de regarder la convergence de la suite, on détermine sa limite, qui sera une des racines de P.
+                </span>
+
+                <div class="row">
+                    <span>Newton:</span>
+                    <div class="system">
+                        <p>Z<sub>0</sub> = C</p>
+                        <p>Z<sub>n+1</sub> = Z<sub>n</sub> + (a + ib) P(Z<sub>n</sub>) / P'(Z<sub>n</sub>)</p>
+                    </div>
+                </div>
+
+                <span>
+                    L'option "Newton classique" correspond à P=X<sup>3</sup>-1, et est plus rapide a afficher.
+                </span>
+
                 <span class="title">Astuces</span>
                 <span>
                     - En appuyant sur les boutons <div class="highlight">+</div> et <div class="highlight">-</div>, 

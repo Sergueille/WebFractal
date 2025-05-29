@@ -1,6 +1,7 @@
 "use strict";
 let isDragging; // Is the user moving the 2d view?
 let lastMousePos; // Last drag position
+let lastTouchesPos; // Last drag position, but for touches
 let lastTouchDistance; // Last distance between touches (for zoom)
 let wasZoomingLastFrame; // Was zooming last frame
 let lastTouchCount;
@@ -11,6 +12,7 @@ const dragAverageSpeedWeight = 0.7;
 let cameraPos = new vec2(0); // position of the camera
 let cameraSize = 1; // sizo of the camera (its height)
 let targetCameraSize = 1; // the size that the camera shold have without smoothing
+let scrollZoomActive = false;
 let shouldSmoothCamera = false;
 let cameraTargetPos;
 let currentMousePos;
@@ -24,6 +26,7 @@ function initCamera() {
     canvas.addEventListener("wheel", onScroll);
     canvas.addEventListener("touchstart", onTouchStart);
     canvas.addEventListener("touchend", onTouchEnd);
+    canvas.addEventListener("touchcancel", onTouchEnd);
     canvas.addEventListener("touchmove", onTouchMove);
 }
 function centerCamera() {
@@ -42,8 +45,10 @@ function updateCamera() {
     }
     else {
         // Update zoom
-        let zoomAmount = (targetCameraSize - cameraSize) * deltaTime / scrollSmooth;
-        addZoom(zoomAmount);
+        if (scrollZoomActive) {
+            let zoomAmount = (targetCameraSize - cameraSize) * deltaTime / scrollSmooth;
+            addZoom(zoomAmount);
+        }
         if (!isDragging) {
             cameraPos = cameraPos.add(dragVelocity);
             dragVelocity = dragVelocity.mult(1 - dragVelocityLoss * deltaTime);
@@ -91,7 +96,7 @@ function onTouchMove(ev) {
     // Ignore if touch count changed
     if (lastTouchCount == touchCount) {
         // Move view
-        let delta = newPos.sub(lastMousePos).divide(canvasSize.y).mult(cameraSize * 2);
+        let delta = newPos.sub(lastTouchesPos).divide(canvasSize.y).mult(cameraSize * 2);
         delta.x *= -1;
         cameraPos = cameraPos.add(delta);
         if (touchCount === 2) { // Zoom
@@ -111,6 +116,7 @@ function onTouchMove(ev) {
     else {
         wasZoomingLastFrame = false;
     }
+    lastTouchesPos = newPos;
     lastMousePos = newPos;
     lastTouchCount = touchCount;
 }
@@ -119,11 +125,19 @@ function onMouseUp(ev) {
 }
 function onTouchEnd(ev) {
     isDragging = false;
+    if (ev.touches.length == 0) {
+        lastTouchCount = 0;
+    }
 }
 function onScroll(ev) {
     shouldSmoothCamera = false;
+    scrollZoomActive = true;
     let deltaNorm = ev.deltaY > 0 ? 1 : -1;
     targetCameraSize += deltaNorm * scrollSensibility * cameraSize;
+    // Prevent browser zoom
+    if (ev.ctrlKey) {
+        ev.preventDefault();
+    }
 }
 function getCameraString() {
     return `${Math.round(cameraPos.x * 1e6) / 1e6},${Math.round(cameraPos.y * 1e6) / 1e6},${Math.round(cameraSize * 1e6) / 1e6}`;
@@ -135,6 +149,9 @@ function addZoom(zoomAmount) {
         screenPos.y = 1 - screenPos.y;
         let zoomCenter = screenPos.sub(new vec2(canvasSize.x / canvasSize.y * 0.5, 0.5)).mult(cameraSize * 2);
         cameraPos = cameraPos.add(zoomCenter.mult(1 - (cameraSize + zoomAmount) / cameraSize));
+    }
+    else {
+        scrollZoomActive = false;
     }
     cameraSize += zoomAmount;
 }

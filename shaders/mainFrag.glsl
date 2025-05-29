@@ -24,6 +24,11 @@ uniform highp float blb_z;
 // Newton
 uniform highp float nwt_a;
 uniform highp float nwt_b;
+uniform highp vec2 nwt_c0;
+uniform highp vec2 nwt_c1;
+uniform highp vec2 nwt_c2;
+uniform highp vec2 nwt_c3;
+uniform highp float nwt_color_oscillation;
 
 highp float mandelbrot();
 highp float julia();
@@ -31,6 +36,8 @@ highp float ship();
 highp float mdb_2();
 highp float mandelbulb();
 highp float newton();
+highp float newton_other();
+
 void main() {
     highp float val;
 
@@ -51,6 +58,9 @@ void main() {
     }
     else if (renderer == 5) {
         val = newton();
+    }
+    else if (renderer == 6) {
+        val = newton_other();
     }
 
     val = clamp(val, 0.0, 1.0);
@@ -81,14 +91,14 @@ highp float mandelbrot() {
 }
 
 
-lowp vec2 mult(lowp vec2 a, lowp vec2 b) {
+highp vec2 mult(highp vec2 a, highp vec2 b) {
     return vec2(
         a.x*b.x - a.y*b.y,
         a.x*b.y + a.y*b.x
     );
 }
-lowp vec2 divide(lowp vec2 a, lowp vec2 b) {
-    lowp float div = 1.0 / dot(b, b);
+highp vec2 divide(highp vec2 a, highp vec2 b) {
+    highp float div = 1.0 / dot(b, b);
     return vec2(
         (a.x*b.x + a.y*b.y) * div,
         (-a.x*b.y + a.y*b.x) * div
@@ -108,6 +118,28 @@ highp float newton() {
     }
 
     return ((Z.y / Z.x) + 1.0) / 2.0;
+}
+
+
+highp float newton_other() {
+    highp vec2 Z = pos;
+    int iterations = int(mdb_iterations);
+    const int maxIter = 10000;
+
+    for (int i = 0; i < maxIter; i++)
+    {
+        if (i > iterations) break;
+
+        Z -= mult(
+            vec2(nwt_a, nwt_b), 
+            divide(
+                nwt_c0 + mult(nwt_c1, Z) + mult(nwt_c2, mult(Z, Z)) + mult(nwt_c3, mult(Z, mult(Z, Z))),
+                nwt_c1 + 2.0 * mult(nwt_c2, Z) + 3.0 * mult(nwt_c3, mult(Z, Z))
+            )
+        );
+    }
+
+    return mod((atan(Z.y / Z.x) + 3.14) * nwt_color_oscillation, 1.0);
 }
 
 

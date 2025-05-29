@@ -16,7 +16,7 @@ html {
 body {
     /* variables here becaus modified by JS*/
     --bg-d: #080808aa;
-    --bg: #222a;
+    --bg: #222;
     --bg-l: #333a;
     --bg-ll: #444a;
 
@@ -29,7 +29,6 @@ body {
     padding: 0;
     height: 100vh;
     background-color: black;
-    background-image: url("loading_bg.png");
     background-size: cover;
 }
 
@@ -148,7 +147,6 @@ button:focus-visible > .tooltip, .btn:focus-visible > .tooltip, select:focus-vis
 }
 
 #panel-wrapper {
-    transition: 200ms;
     position: absolute;
     top: 20px;
     right: 20px;
@@ -158,6 +156,22 @@ button:focus-visible > .tooltip, .btn:focus-visible > .tooltip, select:focus-vis
 
     max-height: calc(100vh - 40px);
     border-radius: 10px;
+
+    opacity: 0;
+    transition: 2s;
+}
+
+#panel-wrapper.animate {
+    animation: panel-hover 4s normal;
+}
+
+#panel-wrapper:hover {
+    opacity: 1 !important;
+    transition: 200ms
+}
+
+#hide-panel_btn {
+    display: none;
 }
 
 .panel {
@@ -356,4 +370,40 @@ button:focus-visible > .tooltip, .btn:focus-visible > .tooltip, select:focus-vis
         bottom: 5px;
         left: 5px;
     }
+
 }
+
+@media screen and (hover: none) {
+    #panel-wrapper {
+        opacity: 0.8 !important;
+        transition: 200ms;
+        animation: none !important;
+    }
+
+    #panel-wrapper:hover {
+        opacity: 0.8 !important;
+    }
+    
+    #panel-wrapper.hidden {
+        opacity: 0 !important;
+    }
+
+    #hide-panel_btn {
+        display: inline-flex;
+    }
+}
+
+@keyframes panel-hover {
+    0% {
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+

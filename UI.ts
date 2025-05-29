@@ -60,6 +60,10 @@ function initUI() {
 
     OpenSubPanel("props-panel");
     HideExportCustomSize();
+
+    setTimeout(() => {
+        document.getElementById("panel-wrapper")?.classList.add("animate");
+    }, 10);
 }
 
 function UpdateKeys(ev: KeyboardEvent) {

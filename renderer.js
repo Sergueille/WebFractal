@@ -125,10 +125,20 @@ function CreateRenderers() {
             new Prop("blb_z", "Position Z", ValType.Float, 0),
             new Prop("blb_iterations", "Nombre d'iterations", ValType.Int, 15),
         ]),
-        new Renderer("Newton", [
+        new Renderer("Newton classique", [
             new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 50),
             new Prop("nwt_a", "a", ValType.Float, 1),
             new Prop("nwt_b", "b", ValType.Float, 0),
+        ]),
+        new Renderer("Newton", [
+            new Prop("mdb_iterations", "Nombre d'iterations", ValType.Int, 30),
+            new Prop("nwt_a", "a", ValType.Float, 1),
+            new Prop("nwt_b", "b", ValType.Float, 0),
+            new Prop("nwt_c0", "c<sub>0</sub>", ValType.Vec2, new vec2(-1.0, 0)),
+            new Prop("nwt_c1", "c<sub>1</sub>", ValType.Vec2, new vec2(0, 0)),
+            new Prop("nwt_c2", "c<sub>2</sub>", ValType.Vec2, new vec2(0, 0)),
+            new Prop("nwt_c3", "c<sub>3</sub>", ValType.Vec2, new vec2(1.0, 0)),
+            new Prop("nwt_color_oscillation", "Variation des couleurs", ValType.Float, 2.0),
         ]),
     ];
 }

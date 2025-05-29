@@ -50,6 +50,10 @@ function initUI() {
     }
     OpenSubPanel("props-panel");
     HideExportCustomSize();
+    setTimeout(() => {
+        var _a;
+        (_a = document.getElementById("panel-wrapper")) === null || _a === void 0 ? void 0 : _a.classList.add("animate");
+    }, 10);
 }
 function UpdateKeys(ev) {
     shift = ev.shiftKey;
