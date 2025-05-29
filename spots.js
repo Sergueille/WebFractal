@@ -26,6 +26,7 @@ const spots = [
     "cam=-0.033442,0.575151,0.000407&vals=0,mdb_val:0|0.245,mdb_offset:3.041,mdb_iterations:400&colors=241104,145b70,58ed6f,0.95",
     "cam=-0.493265,-0.160558,0.001331&vals=2,mdb_val:-0.764|-0.229,mdb_offset:2,mdb_iterations:150&colors=15510d,9cefc6,e4ee9d,0.95",
     "cam=-1.748459,0.003046,0.000531&vals=2,mdb_val:0|-0.255,mdb_offset:2.095,mdb_iterations:150&colors=15510d,efd79c,fb9b9d,0.95",
+    "cam=-0.996321,0.105999,0.000127&vals=0,mdb_val:0.00015|0.281,mdb_offset:3.041,mdb_iterations:400&colors=161348,7dd757,96d399,0.9"
 ];
 function RandomSpot() {
     let randomSpot = spots[Math.floor(Math.random() * spots.length)];

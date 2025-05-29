@@ -47,9 +47,15 @@ initUI();
 function Render() {
     // Bind array buffer
     GL.bindBuffer(GL.ARRAY_BUFFER, quadPosBuffer);
-    cameraPos = new vec2(Math.round(cameraPos.x * canvasSize.x / cameraSize) / canvasSize.x * cameraSize, Math.round(cameraPos.y * canvasSize.y / cameraSize) / canvasSize.y * cameraSize);
+    /*
+    cameraPos = new vec2(Math.round(cameraPos.x * canvasSize.x / cameraSize) / canvasSize.x * cameraSize,
+                         Math.round(cameraPos.y * canvasSize.y / cameraSize) / canvasSize.y * cameraSize);
+    */
+    let cameraWidth = cameraSize * ratio;
+    let renderCamPos = new vec2(Math.round(cameraPos.x / cameraWidth * canvasSize.x) * cameraWidth / canvasSize.x, Math.round(cameraPos.y / cameraSize * canvasSize.y) * cameraSize / canvasSize.y);
     if (!lastCamPos)
         lastCamPos = cameraPos;
+    let renderCamLastPos = new vec2(Math.round(lastCamPos.x / cameraWidth * canvasSize.x) * cameraWidth / canvasSize.x, Math.round(lastCamPos.y / cameraSize * canvasSize.y) * cameraSize / canvasSize.y);
     // Draw main quad
     if (shaderLoaded("main") && shaderLoaded("blur") && shaderLoaded("blit")) {
         let mainShader = getShader("main");
@@ -66,14 +72,15 @@ function Render() {
         // Set uniforms
         SetVertexArray(mainShader);
         GL.uniform1f(getShaderUniform(mainShader, "ratio"), ratio);
-        GL.uniform2f(getShaderUniform(mainShader, "camPos"), cameraPos.x + randomShiftX, cameraPos.y + randomShiftY);
+        GL.uniform2f(getShaderUniform(mainShader, "camPos"), renderCamPos.x + randomShiftX, renderCamPos.y + randomShiftY);
         GL.uniform1f(getShaderUniform(mainShader, "camSize"), cameraSize);
         GL.uniform1i(getShaderUniform(mainShader, "renderer"), currentRendererID);
         UpdateUI();
         GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
         /////// CUMUL PASS
         useShader(blurShader);
-        let shift = cameraPos.sub(lastCamPos).dividev(new vec2(2 * cameraSize * canvasSize.x / canvasSize.y, 2 * cameraSize));
+        let shift = renderCamPos.sub(renderCamLastPos).dividev(new vec2(2 * cameraSize * canvasSize.x / canvasSize.y, 2 * cameraSize));
+        console.log(shift);
         if (!propsChangedSinceLastFrame) {
             GL.uniform2f(getShaderUniform(blurShader, "shift"), shift.x, shift.y);
             GL.uniform1f(getShaderUniform(blurShader, "sizeShift"), (lastCamSize - cameraSize) / lastCamSize);
@@ -132,7 +139,7 @@ function RenderLoop() {
         }
     }
     else {
-        if (time > 5 && deltaTime * 1000 > 100 && !discardedSlowMessage) { // Too slow
+        if (time > 5 && deltaTime * 1000 > 150 && !discardedSlowMessage) { // Too slow
             slowMessage.classList.remove("hidden");
             isShowingSlowMessage = true;
         }

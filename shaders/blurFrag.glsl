@@ -18,8 +18,11 @@ void main() {
     else
     {
         lowp vec3 cumulval = texture2D(cumul, shiftedUV).xyz;
+
         // texval.x += sin(pos.x * 180.0) * sin(pos.x * 180.0) * sin(pos.x * 180.0);
+        
         gl_FragColor = vec4(texval * 0.05 + cumulval * 0.95, 1.0);
+
         //gl_FragColor = vec4(texval * 0.005 + cumulval * 0.995, 1.0);
     }
 }
