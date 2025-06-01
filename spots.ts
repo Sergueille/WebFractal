@@ -33,6 +33,7 @@ const spots = [
     "cam=0.275197,0.225396,1.371639&vals=5,mdb_iterations:60,nwt_a:0.975,nwt_b:1.038&colors=ffffff,f8e45c,000000,0.95",
     "cam=0.04014,0.040584,19.878422&vals=5,mdb_iterations:70,nwt_a:0.243,nwt_b:-0.626&colors=9141ac,ff7800,241f31,0.95",
     "cam=0.197514,-2.012774,0.122813&vals=5,mdb_iterations:63,nwt_a:1.88,nwt_b:0.664&colors=172540,74ff78,4b6f5e,0.95",
+    "cam=-0.871402,0.090113,0.001049&vals=0,mdb_val:0|0,mdb_offset:2.706,mdb_iterations:228&colors=0f1f34,1c71d8,deddda,0.95",
 ];
 
 function RandomSpot() {

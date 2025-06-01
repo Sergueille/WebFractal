@@ -30,6 +30,9 @@ let renderLoopHandle: number;
 let averageDeltaTime = 0;
 const fpsSlidingAverageFactor = 0.05;
 
+const SLEEP_INACTIVITY_FRAMES = 30; // If this much frames are rendered without a change, stop rendering
+let inactiveFramesCounter = 0;
+
 CreateContext();
 CreateQuad();
 CreateBufferAndTextures();
@@ -69,8 +72,16 @@ function Render() {
         Math.round(lastCamPos.y / cameraSize * canvasSize.y) * cameraSize / canvasSize.y,
     );
 
+    let isInactiveFrame = propsChangedSinceLastFrame || !renderCamPos.isEq(renderCamLastPos) || cameraSize !== lastCamSize;
+    if (isInactiveFrame) {
+        inactiveFramesCounter = 0;
+    }
+    else {
+        inactiveFramesCounter += 1;
+    }
+
     // Draw main quad
-    if (shaderLoaded("main") && shaderLoaded("blur") && shaderLoaded("blit")) {
+    if (inactiveFramesCounter < SLEEP_INACTIVITY_FRAMES && shaderLoaded("main") && shaderLoaded("blur") && shaderLoaded("blit")) {
         let mainShader = getShader("main");
         let blurShader = getShader("blur");
         let blitShader = getShader("blit");
@@ -92,7 +103,7 @@ function Render() {
         GL.uniform1f(getShaderUniform(mainShader, "camSize"), cameraSize);
         GL.uniform1i(getShaderUniform(mainShader, "renderer"), currentRendererID);
         UpdateUI();
-
+        
         GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
 
         /////// CUMUL PASS
