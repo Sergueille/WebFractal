@@ -32,6 +32,10 @@ var ExportSizeType;
     ExportSizeType[ExportSizeType["windowSize"] = 1] = "windowSize";
     ExportSizeType[ExportSizeType["customSize"] = 2] = "customSize";
 })(ExportSizeType || (ExportSizeType = {}));
+// Update panel size
+setInterval(() => {
+    panel.style.setProperty("height", (currentSubPanel === null || currentSubPanel === void 0 ? void 0 : currentSubPanel.clientHeight) + "px");
+}, 100);
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
         let option = document.createElement("option");
@@ -83,7 +87,6 @@ function UpdateUI() {
         GL.uniform1f(getShaderUniform(shader, "treshold"), +colorThreshold.value);
         document.body.style.setProperty('--prim', colorInputB.value);
     }
-    panel.style.setProperty("height", (currentSubPanel === null || currentSubPanel === void 0 ? void 0 : currentSubPanel.clientHeight) + "px");
 }
 function AddButton(ev, direction, int) {
     let func = setInterval(() => {

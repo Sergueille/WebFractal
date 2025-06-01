@@ -38,6 +38,12 @@ enum ExportSizeType {
     customSize
 }
 
+// Update panel size
+setInterval(() => {
+    panel.style.setProperty("height", currentSubPanel?.clientHeight + "px");
+}, 100)
+
+
 function initUI() {
     for (let i = 0; i < renderers.length; i++) {
         let option = document.createElement("option");
@@ -100,8 +106,6 @@ function UpdateUI() {
         
         document.body.style.setProperty('--prim', colorInputB.value);
     }
-    
-    panel.style.setProperty("height", currentSubPanel?.clientHeight + "px");
 }
 
 function AddButton(ev: Event, direction: number, int: boolean) {
